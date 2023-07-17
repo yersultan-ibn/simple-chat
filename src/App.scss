@@ -1,0 +1,154 @@
+.login-page {
+  width: 500px;
+  width: 400;
+  border: "2px solid #000";
+  box-shadow: 2px 7px 46px 23px rgba(0, 0, 0, 0.1);
+  margin-top: 100px;
+  margin-right: auto;
+  margin-left: auto;
+  border-radius: 14px;
+  padding: 30px;
+}
+
+.login-page-title {
+  text-align: center;
+  color: #409cff;
+  font-size: 30px;
+}
+
+.form {
+  .form-input {
+    display: flex;
+    flex-direction: column;
+    padding: 25px 10px;
+
+    label {
+      text-align: center;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    input {
+      padding: 15px 10px;
+      border-radius: 13px;
+      border: 1px solid #cecece;
+      outline: none;
+    }
+  }
+  button {
+    background: #ffd306;
+    color: #000;
+    margin: auto;
+    display: block;
+    width: 150px;
+    &:hover {
+      background: #ffd10691;
+    }
+  }
+}
+.reports-page {
+  display: flex;
+  height: 100vh;
+}
+.sidebar {
+  background: #067eff;
+  padding: 20px 10px;
+  color: #fff;
+  height: 100%;
+  width: 400px;
+  text-align: center;
+
+  h6 {
+    margin: 40px 0px 70px 0px;
+  }
+  .sidebar-btn {
+    padding: 20px 10px;
+    cursor: pointer;
+    &.sidebar-btn-active {
+      background: #ffd306;
+      color: #000;
+    }
+  }
+}
+.reports-main {
+  margin: 30px 30px auto 30px;
+  width: 90%;
+}
+.top-report {
+  box-shadow: 2px 7px 46px 23px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  border-radius: 13px;
+
+  .form-report {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 700px;
+
+    > div {
+      margin-top: 30px;
+      display: flex;
+      flex-direction: column;
+
+      .identifier-input {
+        width: 250px;
+        border-radius: 20px;
+      }
+      #outlined-select-currency {
+        width: 200px;
+      }
+      .identifier-label {
+        padding: 8px 10px;
+      }
+      label {
+        margin-bottom: 10px;
+        text-align: left;
+        font-weight: 700;
+      }
+    }
+    button {
+      background: #ffd306;
+      padding: 15px 30px;
+      border-radius: 15px;
+      color: #000;
+
+      &:hover {
+        background: #bc9a02;
+      }
+    }
+  }
+}
+
+.report-body {
+  margin-top: 30px;
+  border: 1px solid #dfe0eb;
+  border-radius: 8px;
+  box-shadow: 2px 7px 46px 23px rgba(0, 0, 0, 0.1);
+
+  .report-body-top {
+    margin-top: 30px;
+    padding: 20px;
+  }
+
+  h4 {
+    margin-bottom: 30px;
+  }
+
+  .tabs-panel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; // Добавляем выравнивание по вертикали
+  }
+
+  .table {
+    .table-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center; // Добавляем выравнивание по вертикали
+      border-top: 1px solid #dfe0eb;
+      border-bottom: 1px solid #dfe0eb;
+      padding: 20px;
+      cursor: pointer;
+    }
+  }
+}
