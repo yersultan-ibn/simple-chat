@@ -1,47 +1,18 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { ThemeButtons } from "../helpers/theme-buttons";
+import { FormField } from "../helpers/form-field";
+import { FormSubmit } from "../helpers/form-submit";
 
 const validationSchema = Yup.object().shape({
   username: Yup.string()
     .email("Invalid email format")
-    .min(3, "Email must be at least 3 characters")
+    .min(3, "Email address must have at least 3 characters")
     .required("Email is required"),
 });
-const themes = [
-  {
-    background: "#1A1A2E",
-    color: "#FFFFFF",
-    primaryColor: "#0F3460",
-  },
-  {
-    background: "#461220",
-    color: "#FFFFFF",
-    primaryColor: "#E94560",
-  },
-  {
-    background: "#192A51",
-    color: "#FFFFFF",
-    primaryColor: "#967AA1",
-  },
-  {
-    background: "#F7B267",
-    color: "#000000",
-    primaryColor: "#F4845F",
-  },
-  {
-    background: "#F25F5C",
-    color: "#000000",
-    primaryColor: "#642B36",
-  },
-  {
-    background: "#231F20",
-    color: "#FFF",
-    primaryColor: "#BB4430",
-  },
-];
 
 export const CheckEmail = () => {
   const navigate = useNavigate();
@@ -58,20 +29,20 @@ export const CheckEmail = () => {
           body: JSON.stringify({ email: values.username }),
         }
       );
+
       if (response.ok) {
         const data = response.json();
-
         navigate("/check-confirm-code?email=" + values.username);
       } else {
         setEmailState(values.username);
         setShowError(
-          "We have already sent code confirmation. Please check your email"
+          "We have already sent a confirmation code. Please check your email."
         );
       }
 
-      console.log("Email availability check successful");
+      console.log("Проверка доступности электронной почты выполнена успешно");
     } catch (error) {
-      console.error("Error checking email availability", error);
+      console.error("Ошибка при проверке доступности электронной почты", error);
     }
   };
 
@@ -95,28 +66,20 @@ export const CheckEmail = () => {
               alt="illustration"
               className="illustration"
             />
-            <h1 className="opacity form-title">Send an email</h1>
+            <h1 className="opacity form-title">Send to mail</h1>
             <Formik
-              initialValues={{ username: "", password: "" }}
+              initialValues={{ username: "" }}
               validationSchema={validationSchema}
               onSubmit={checkEmailAvailability}
             >
               <Form>
-                <Field type="text" name="username" placeholder="Email" />
-                <ErrorMessage
+                <FormField
+                  type="text"
                   name="username"
-                  component="p"
-                  className="form-error"
+                  placeholder="Email"
+                  value={emailState}
                 />
-                {/* <Field type="password" name="password" placeholder="password" />
-                <ErrorMessage
-                  name="password"
-                  component="p"
-                  className="form-error"
-                /> */}
-                <Button type="submit" className="opacity">
-                  Next
-                </Button>
+                <FormSubmit buttonText="Next" />
               </Form>
             </Formik>
             <div className="register-forget opacity">
@@ -132,25 +95,7 @@ export const CheckEmail = () => {
           </div>
           <div className="circle circle-two"></div>
         </div>
-        <div className="theme-btn-container">
-          {themes.map((theme: any) => {
-            const style = {
-              background: theme.background,
-              marginBottom: "5px",
-              cursor: "pointer",
-              padding: "10px",
-            };
-            return (
-              <span
-                style={style}
-                key={theme.background}
-                onClick={() => handleThemeChange(theme.background)}
-              >
-                {theme.background}
-              </span>
-            );
-          })}
-        </div>
+        <ThemeButtons handleThemeChange={handleThemeChange} />
       </Box>
     </Box>
   );
