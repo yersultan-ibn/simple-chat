@@ -41,9 +41,7 @@ export const CheckConfirmCode = () => {
         const leftTriesCount = errorData?.left_tries_count;
         const textError = `${errorMessage} ${leftTriesCount}`;
         setShowError(textError);
-        
       }
-
       console.log("Проверка кода подтверждения выполнена успешно");
     } catch (error) {
       console.error("Ошибка при проверке кода подтверждения", error);
@@ -60,7 +58,7 @@ export const CheckConfirmCode = () => {
       component="div"
       sx={{ background: selectedTheme }}
     >
-      <Link to="/check-email" className="arrow-main">
+      <Link to="/" className="arrow-main">
         <IoIosArrowBack />
       </Link>
       <Box className="container">
@@ -69,7 +67,7 @@ export const CheckConfirmCode = () => {
           <div className="circle circle-one"></div>
           <div className="form-container">
             <img
-              src="https://raw.githubusercontent.com/hicodersofficial/glassmorphism-login-form/master/assets/illustration.png"
+              src="https://nambaone.app/_nuxt/img/business2.5140453.svg"
               alt="illustration"
               className="illustration"
             />

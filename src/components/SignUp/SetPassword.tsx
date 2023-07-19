@@ -63,7 +63,7 @@ export const SetPassword = () => {
       component="div"
       sx={{ background: selectedTheme }}
     >
-      <Link to="/check-email" className="arrow-main">
+      <Link to="/" className="arrow-main">
         <IoIosArrowBack />
       </Link>
       <Box className="container">
@@ -72,7 +72,7 @@ export const SetPassword = () => {
           <div className="circle circle-one"></div>
           <div className="form-container">
             <img
-              src="https://raw.githubusercontent.com/hicodersofficial/glassmorphism-login-form/master/assets/illustration.png"
+              src="https://static.wixstatic.com/media/2ecac5_fb91a15ae6434ef1928c733eace04bf3~mv2.png/v1/crop/x_53,y_0,w_427,h_533/fill/w_512,h_639,al_c,lg_1,q_85,enc_auto/Saly-43_edited.png"
               alt="illustration"
               className="illustration"
             />

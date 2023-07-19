@@ -9,18 +9,20 @@ import Loader from "./Loader/Loader";
 
 export const HomePage = () => {
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
-    }, 1500);
+    }, 800);
   }, []);
+
   return (
     <BrowserRouter>
       {loading ? (
         <Loader text="Loading ..." />
       ) : (
         <Routes>
-          <Route path="/check-email" element={<CheckEmail />} />
+          <Route path="/" element={<CheckEmail />} />
           <Route path="/check-confirm-code" element={<CheckConfirmCode />} />
           <Route path="/set-password" element={<SetPassword />} />
           <Route path="/sign-in" element={<SignIn />} />
