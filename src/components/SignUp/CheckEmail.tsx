@@ -6,6 +6,7 @@ import { useState } from "react";
 import { ThemeButtons } from "../helpers/theme-buttons";
 import { FormField } from "../helpers/form-field";
 import { FormSubmit } from "../helpers/form-submit";
+import { RequestMethodsEnum, makeRequest } from "../../tools/request";
 
 const validationSchema = Yup.object().shape({
   username: Yup.string()
@@ -22,26 +23,17 @@ export const CheckEmail = () => {
 
   const checkEmailAvailability = async (values: any) => {
     try {
-      const response = await fetch(
-        "https://simple-chat-api-production.up.railway.app/api/auth/sign-up/check-email",
-        {
-          method: "POST",
-          body: JSON.stringify({ email: values.username }),
-        }
-      );
+      const data = await makeRequest({
+        url: "auth/sign-up/check-email",
+        body: JSON.stringify({ email: values.username }),
+        method: RequestMethodsEnum.POST
+      })
 
-      if (response.ok) {
-        const data = response.json();
-        navigate("/check-confirm-code?email=" + values.username);
-      } else {
-        setEmailState(values.username);
-        setShowError(
-          "We have already sent a confirmation code. Please check your email."
-        );
-      }
-
-      console.log("Проверка доступности электронной почты выполнена успешно");
-    } catch (error) {
+      console.log(data)
+      alert("Success")
+    } catch (error: any) {
+      console.log(error)
+      alert(error?.message || error)
       console.error("Ошибка при проверке доступности электронной почты", error);
     }
   };
