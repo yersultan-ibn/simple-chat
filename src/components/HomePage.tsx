@@ -7,6 +7,7 @@ import { TransitionGroup, CSSTransition } from "react-transition-group";
 import { Suspense, useEffect, useState } from "react";
 import Loader from "./Loader/Loader";
 import { Dashboard } from "./Dashboard/Dashboard";
+import { SocketConnection } from "./sockets/SocketConnection";
 
 export const HomePage = () => {
   const [loading, setLoading] = useState(true);
@@ -30,6 +31,7 @@ export const HomePage = () => {
           <Route path="/dasboard" element={<Dashboard />} />
         </Routes>
       )}
+      <SocketConnection />
     </BrowserRouter>
   );
 };

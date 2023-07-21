@@ -9,6 +9,7 @@ import { FormField } from "../helpers/form-field";
 import { FormSubmit } from "../helpers/form-submit";
 import { IoIosArrowBack } from "react-icons/io";
 import { RequestMethodsEnum, makeRequest } from "../../tools/request";
+import Cookies from "js-cookie"; 
 
 const validationSchema = Yup.object().shape({
   // username: Yup.string()
@@ -50,7 +51,8 @@ export const SignIn = () => {
 
       const token = data.token;
 
-      localStorage.setItem("token", token);
+      // Сохраняем токен в cookie
+      Cookies.set("token", token);
 
       console.log(token);
 
