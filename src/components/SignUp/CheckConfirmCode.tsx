@@ -7,6 +7,7 @@ import { IoIosArrowBack } from "react-icons/io";
 import { ThemeButtons } from "../helpers/theme-buttons";
 import { FormField } from "../helpers/form-field";
 import { FormSubmit } from "../helpers/form-submit";
+import { RequestMethodsEnum, makeRequest } from "../../tools/request";
 
 const validationSchema = Yup.object().shape({
   code: Yup.string()
@@ -24,27 +25,21 @@ export const CheckConfirmCode = () => {
 
   const checkConfirmationCode = async (values: any) => {
     try {
-      const response = await fetch(
-        "https://simple-chat-api-production.up.railway.app/api/auth/sign-up/check-confirm-code",
-        {
-          method: "POST",
-          body: JSON.stringify({ email, code: values.code }),
-        }
-      );
+      const data = await makeRequest({
+        url: "auth/sign-up/check-confirm-code",
+        body: JSON.stringify({ email, code: values.code }),
+        method: RequestMethodsEnum.POST,
+      });
 
-      if (response.ok) {
-        const data = response.json();
-        navigate(`/set-password?email=${email}`);
-      } else {
-        const errorData = await response.json();
-        const errorMessage = errorData.errorMessage;
-        const leftTriesCount = errorData?.left_tries_count;
-        const textError = `${errorMessage} ${leftTriesCount}`;
-        setShowError(textError);
-      }
-      console.log("Проверка кода подтверждения выполнена успешно");
-    } catch (error) {
-      console.error("Ошибка при проверке кода подтверждения", error);
+      console.log(data);
+
+      navigate(`/set-password?email=${email}`);
+    } catch (error: any) {
+      const errorMessage = error.message; // Use error.message directly
+      const leftTriesCount = error.data?.leftTriesCount; // Use error.data?.leftTriesCount
+      const textError = `${errorMessage} ${leftTriesCount !== undefined ? leftTriesCount : ""}`;
+      setShowError(textError);
+      console.error("Ошибка при проверке доступности электронной почты", error);
     }
   };
 
@@ -63,8 +58,8 @@ export const CheckConfirmCode = () => {
       </Link>
       <Box className="container">
         <div className="login-container">
-          <div className="form-error form-error-top">{showError}</div>
           <div className="circle circle-one"></div>
+          <div className="form-error form-error-top">{showError}</div>
           <div className="form-container">
             <img
               src="https://nambaone.app/_nuxt/img/business2.5140453.svg"

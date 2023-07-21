@@ -179,9 +179,10 @@
   }
 }
 .form-error-top {
-  margin-bottom: 30px;
-  position: relative;
+  margin-bottom: 80px;
+  position: absolute;
   z-index: 1;
+  top: -120px;
 }
 .enter-code {
   z-index: 2;

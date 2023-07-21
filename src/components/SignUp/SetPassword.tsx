@@ -8,6 +8,7 @@ import { ThemeButtons } from "../helpers/theme-buttons";
 import { FormField } from "../helpers/form-field";
 import { FormSubmit } from "../helpers/form-submit";
 import { IoIosArrowBack } from "react-icons/io";
+import { RequestMethodsEnum, makeRequest } from "../../tools/request";
 
 const validationSchema = Yup.object().shape({
   // username: Yup.string()
@@ -32,24 +33,18 @@ export const SetPassword = () => {
 
   const handleSetPassword = async (values: any) => {
     try {
-      const response = await fetch(
-        "https://simple-chat-api-production.up.railway.app/api/auth/sign-up/set-password",
-        {
-          method: "POST",
-          body: JSON.stringify({ email, password: values.password }),
-        }
-      );
+      const data = await makeRequest({
+        url: "auth/sign-up/set-password",
+        body: JSON.stringify({ email, password: values.password }),
+        method: RequestMethodsEnum.POST,
+      });
 
-      if (response.ok) {
-        const data = response.json();
-        navigate("/sign-in");
-      } else {
-        setShowError("No such user");
-      }
+      console.log(data);
 
-      console.log("Подтверждение пароля выполнено успешно");
-    } catch (error) {
-      console.error("Ошибка при подтверждении пароля", error);
+      navigate(`/sign-in`);
+    } catch (error: any) {
+      setShowError("No such user");
+      console.error("Ошибка при проверке доступности электронной почты", error);
     }
   };
 

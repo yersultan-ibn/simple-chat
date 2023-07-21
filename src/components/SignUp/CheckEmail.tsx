@@ -26,14 +26,16 @@ export const CheckEmail = () => {
       const data = await makeRequest({
         url: "auth/sign-up/check-email",
         body: JSON.stringify({ email: values.username }),
-        method: RequestMethodsEnum.POST
-      })
+        method: RequestMethodsEnum.POST,
+      });
 
-      console.log(data)
-      alert("Success")
+      console.log(data);
+      navigate("/check-confirm-code?email=" + values.username);
     } catch (error: any) {
-      console.log(error)
-      alert(error?.message || error)
+      console.log(error);
+      setShowError(
+        "We have already sent a confirmation code. Please check your email."
+      );
       console.error("Ошибка при проверке доступности электронной почты", error);
     }
   };
