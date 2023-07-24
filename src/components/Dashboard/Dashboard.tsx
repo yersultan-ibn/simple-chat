@@ -1,8 +1,10 @@
+import Cookies from "js-cookie";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface DashboardMessage {
   message: string;
+  errorMessage: string;
 }
 
 export const Dashboard: React.FC = () => {
@@ -10,6 +12,7 @@ export const Dashboard: React.FC = () => {
   const [messageFromServer, setMessageFromServer] = useState<string | null>(
     null
   );
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -19,7 +22,7 @@ export const Dashboard: React.FC = () => {
     );
 
     socket.onopen = () => {
-      console.log("Соединение WebSocket установлено.");
+      console.log("WebSocket соединение установлено.");
       socket.send("Hello, сервер!");
     };
 
@@ -30,6 +33,13 @@ export const Dashboard: React.FC = () => {
       if (data.message) {
         setMessageFromServer(data.message);
       }
+
+      if (data.errorMessage) {
+        setErrorMessage(data.errorMessage);
+
+        localStorage.removeItem("token");
+        Cookies.remove("token");
+      }
     };
 
     socket.onerror = (error: Event) => {
@@ -38,9 +48,9 @@ export const Dashboard: React.FC = () => {
     };
 
     socket.onclose = (event: CloseEvent) => {
-      console.log("Соединение WebSocket закрыто.");
+      console.log("WebSocket соединение закрыто.");
       if (event.code === 1000) {
-        console.log("Соединение закрыто успешно.");
+        console.log("WebSocket соединение закрыто успешно.");
       } else {
         console.error("Ошибка WebSocket соединения:", event.reason);
         navigate("/");
@@ -63,7 +73,7 @@ export const Dashboard: React.FC = () => {
     );
 
     socket.onopen = () => {
-      console.log("Соединение WebSocket установлено.");
+      console.log("WebSocket соединение установлено.");
       socket.send(inputValue);
     };
 
@@ -74,6 +84,14 @@ export const Dashboard: React.FC = () => {
       if (data.message) {
         setMessageFromServer(data.message);
       }
+
+      if (data.errorMessage) {
+        setErrorMessage(data.errorMessage);
+
+        // Удаление токена из localStorage и cookies
+        localStorage.removeItem("token");
+        Cookies.remove("token");
+      }
     };
 
     socket.onerror = (error: Event) => {
@@ -81,7 +99,7 @@ export const Dashboard: React.FC = () => {
     };
 
     socket.onclose = () => {
-      console.log("Соединение WebSocket закрыто.");
+      console.log("WebSocket соединение закрыто.");
     };
     setInputValue("");
   };
@@ -105,6 +123,12 @@ export const Dashboard: React.FC = () => {
         <div className="message-container">
           <h2 className="message-title">Message from Server:</h2>
           <p className="message-text">{messageFromServer}</p>
+        </div>
+      )}
+      {errorMessage && (
+        <div className="error-message-container">
+          <h2 className="error-message-title">Error:</h2>
+          <p className="error-message-text">{errorMessage}</p>
         </div>
       )}
     </div>
