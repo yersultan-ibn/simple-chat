@@ -1,15 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-export const Dashboard = () => {
+interface DashboardMessage {
+  message: string;
+}
+
+export const Dashboard: React.FC = () => {
   const [inputValue, setInputValue] = useState("");
-  const [messageFromServer, setMessageFromServer] = useState("");
+  const [messageFromServer, setMessageFromServer] = useState<string | null>(
+    null
+  );
+  const navigate = useNavigate();
 
-  const handleInputChange = (event: any) => {
-    setInputValue(event.target.value);
-  };
-
-  const handleSendData = () => {
-    // Выполняем запрос к WebSocket, передавая введенное значение
+  useEffect(() => {
     const token = localStorage.getItem("token");
     const socket = new WebSocket(
       `ws://simple-chat-api-production.up.railway.app/ws?token=${token}`
@@ -17,26 +20,70 @@ export const Dashboard = () => {
 
     socket.onopen = () => {
       console.log("Соединение WebSocket установлено.");
-      socket.send(inputValue); // Отправляем значение из состояния inputValue
+      socket.send("Hello, сервер!");
     };
 
-    socket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
+    socket.onmessage = (event: MessageEvent) => {
+      const data: DashboardMessage = JSON.parse(event.data);
       console.log("Получено сообщение от сервера:", data);
 
-      // Обновляем состояние компонента с полученными данными
       if (data.message) {
         setMessageFromServer(data.message);
       }
     };
 
-    socket.onerror = (error) => {
+    socket.onerror = (error: Event) => {
+      console.error("Ошибка WebSocket соединения:", error);
+      navigate("/");
+    };
+
+    socket.onclose = (event: CloseEvent) => {
+      console.log("Соединение WebSocket закрыто.");
+      if (event.code === 1000) {
+        console.log("Соединение закрыто успешно.");
+      } else {
+        console.error("Ошибка WebSocket соединения:", event.reason);
+        navigate("/");
+      }
+    };
+
+    return () => {
+      socket.close();
+    };
+  }, [navigate]);
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.target.value);
+  };
+
+  const handleSendData = () => {
+    const token = localStorage.getItem("token");
+    const socket = new WebSocket(
+      `ws://simple-chat-api-production.up.railway.app/ws?token=${token}`
+    );
+
+    socket.onopen = () => {
+      console.log("Соединение WebSocket установлено.");
+      socket.send(inputValue);
+    };
+
+    socket.onmessage = (event: MessageEvent) => {
+      const data: DashboardMessage = JSON.parse(event.data);
+      console.log("Получено сообщение от сервера:", data);
+
+      if (data.message) {
+        setMessageFromServer(data.message);
+      }
+    };
+
+    socket.onerror = (error: Event) => {
       console.error("Ошибка WebSocket соединения:", error);
     };
 
     socket.onclose = () => {
       console.log("Соединение WebSocket закрыто.");
     };
+    setInputValue("");
   };
 
   return (

@@ -59,12 +59,14 @@
   border-radius: 50%;
   transform: translate(80px, 80px) scale(1);
   background: #832bc1;
-  animation: ldio-ogtm8crjy8g 2.2222222222222223s infinite cubic-bezier(0, 0.5, 0.5, 1);
+  animation: ldio-ogtm8crjy8g 2.2222222222222223s infinite
+    cubic-bezier(0, 0.5, 0.5, 1);
 }
 .ldio-ogtm8crjy8g div:nth-child(1) {
   background: #503ae6;
   transform: translate(148px, 80px) scale(1);
-  animation: ldio-ogtm8crjy8g-r 0.5555555555555556s infinite cubic-bezier(0, 0.5, 0.5, 1),
+  animation: ldio-ogtm8crjy8g-r 0.5555555555555556s infinite
+      cubic-bezier(0, 0.5, 0.5, 1),
     ldio-ogtm8crjy8g-c 2.2222222222222223s infinite step-start;
 }
 .ldio-ogtm8crjy8g div:nth-child(2) {

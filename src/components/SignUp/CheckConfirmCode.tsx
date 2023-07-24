@@ -37,7 +37,9 @@ export const CheckConfirmCode = () => {
     } catch (error: any) {
       const errorMessage = error.message; // Use error.message directly
       const leftTriesCount = error.data?.leftTriesCount; // Use error.data?.leftTriesCount
-      const textError = `${errorMessage} ${leftTriesCount !== undefined ? leftTriesCount : ""}`;
+      const textError = `${errorMessage} ${
+        leftTriesCount !== undefined ? leftTriesCount : ""
+      }`;
       setShowError(textError);
       console.error("Ошибка при проверке доступности электронной почты", error);
     }
