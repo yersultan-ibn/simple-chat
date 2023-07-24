@@ -1,5 +1,5 @@
 import Cookies from "js-cookie";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface DashboardMessage {
@@ -13,9 +13,20 @@ export const Dashboard: React.FC = () => {
     null
   );
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [sentMessages, setSentMessages] = useState<string[]>([]);
   const navigate = useNavigate();
+  const socketRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
+    initializeWebSocket();
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.close();
+      }
+    };
+  }, []);
+
+  const initializeWebSocket = () => {
     const token = localStorage.getItem("token");
     const socket = new WebSocket(
       `ws://simple-chat-api-production.up.railway.app/ws?token=${token}`
@@ -57,50 +68,21 @@ export const Dashboard: React.FC = () => {
       }
     };
 
-    return () => {
-      socket.close();
-    };
-  }, [navigate]);
+    socketRef.current = socket;
+  };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
   };
 
   const handleSendData = () => {
-    const token = localStorage.getItem("token");
-    const socket = new WebSocket(
-      `ws://simple-chat-api-production.up.railway.app/ws?token=${token}`
-    );
+    if (!socketRef.current) {
+      console.error("WebSocket соединение не установлено.");
+      return;
+    }
 
-    socket.onopen = () => {
-      console.log("WebSocket соединение установлено.");
-      socket.send(inputValue);
-    };
-
-    socket.onmessage = (event: MessageEvent) => {
-      const data: DashboardMessage = JSON.parse(event.data);
-      console.log("Получено сообщение от сервера:", data);
-
-      if (data.message) {
-        setMessageFromServer(data.message);
-      }
-
-      if (data.errorMessage) {
-        setErrorMessage(data.errorMessage);
-
-        // Удаление токена из localStorage и cookies
-        localStorage.removeItem("token");
-        Cookies.remove("token");
-      }
-    };
-
-    socket.onerror = (error: Event) => {
-      console.error("Ошибка WebSocket соединения:", error);
-    };
-
-    socket.onclose = () => {
-      console.log("WebSocket соединение закрыто.");
-    };
+    socketRef.current.send(inputValue);
+    setSentMessages((prevMessages) => [...prevMessages, inputValue]);
     setInputValue("");
   };
 
@@ -119,6 +101,18 @@ export const Dashboard: React.FC = () => {
           Send Data
         </button>
       </div>
+      {sentMessages.length > 0 && (
+        <div className="sent-messages-container">
+          <h2 className="sent-messages-title">Sent Messages:</h2>
+          <ul className="sent-messages-list">
+            {sentMessages.map((message, index) => (
+              <li key={index} className="sent-message-item">
+                {message}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
       {messageFromServer && (
         <div className="message-container">
           <h2 className="message-title">Message from Server:</h2>
