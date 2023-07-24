@@ -53,7 +53,7 @@ export const CheckConfirmCode = () => {
       component="div"
       sx={{ background: selectedTheme }}
     >
-      <Link to="/" className="arrow-main">
+      <Link to="/check-email" className="arrow-main">
         <IoIosArrowBack />
       </Link>
       <Box className="container">

@@ -1,4 +1,10 @@
-import { BrowserRouter, Route, Router, Routes } from "react-router-dom";
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  Router,
+  Routes,
+} from "react-router-dom";
 import { CheckEmail } from "./SignUp/CheckEmail";
 import { CheckConfirmCode } from "./SignUp/CheckConfirmCode";
 import { SetPassword } from "./SignUp/SetPassword";
@@ -8,6 +14,7 @@ import { Suspense, useEffect, useState } from "react";
 import Loader from "./Loader/Loader";
 import { Dashboard } from "./Dashboard/Dashboard";
 import { SocketConnection } from "./sockets/SocketConnection";
+import { PrivateRoute } from "./PrivateRoute/PrivateRoute";
 
 export const HomePage = () => {
   const [loading, setLoading] = useState(true);
@@ -24,14 +31,20 @@ export const HomePage = () => {
         <Loader text="Loading ..." />
       ) : (
         <Routes>
-          <Route path="/" element={<CheckEmail />} />
+          <Route path="/check-email" element={<CheckEmail />} />
           <Route path="/check-confirm-code" element={<CheckConfirmCode />} />
           <Route path="/set-password" element={<SetPassword />} />
           <Route path="/sign-in" element={<SignIn />} />
-          <Route path="/dasboard" element={<Dashboard />} />
+          <Route
+            path="/"
+            element={
+              <PrivateRoute>
+                <Dashboard />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       )}
-      <SocketConnection />
     </BrowserRouter>
   );
 };

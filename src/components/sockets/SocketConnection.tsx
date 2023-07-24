@@ -35,6 +35,7 @@ export const SocketConnection: React.FC = () => {
   return (
     <div>
       <h1>WebSocket соединение</h1>
+      {/* <button onClick={onLogout}>Выйти</button>  */}
     </div>
   );
 };

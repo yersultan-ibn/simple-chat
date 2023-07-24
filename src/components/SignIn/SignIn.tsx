@@ -9,7 +9,7 @@ import { FormField } from "../helpers/form-field";
 import { FormSubmit } from "../helpers/form-submit";
 import { IoIosArrowBack } from "react-icons/io";
 import { RequestMethodsEnum, makeRequest } from "../../tools/request";
-import Cookies from "js-cookie"; 
+import Cookies from "js-cookie";
 
 const validationSchema = Yup.object().shape({
   // username: Yup.string()
@@ -32,11 +32,12 @@ export const SignIn = () => {
   const [selectedTheme, setSelectedTheme] = useState("");
 
   // useEffect(() => {
+  //   // Check if the user is already authenticated
   //   const storedToken = localStorage.getItem("token");
   //   if (storedToken) {
-  //     navigate(`/dasboard`);
+  //     navigate(`/`);
   //   }
-  // }, []);
+  // }, [navigate]);
 
   const handleSignIn = async (values: any) => {
     try {
@@ -52,11 +53,12 @@ export const SignIn = () => {
       const token = data.token;
 
       // Сохраняем токен в cookie
+      localStorage.setItem("token", token);
       Cookies.set("token", token);
 
       console.log(token);
 
-      navigate(`/dasboard`);
+      navigate(`/`);
     } catch (error: any) {
       setShowError("User not registered");
       console.error("Ошибка при проверке доступности электронной почты", error);
