@@ -102,9 +102,19 @@ export const SignIn = () => {
                   value={emailState}
                 />
                 <FormField type="text" name="password" placeholder="Password" />
-                <FormSubmit buttonText="Register" />
+                <FormSubmit buttonText="Log in" />
               </Form>
             </Formik>
+            <div className="register-forget opacity">
+              <p style={{ color: "#fff" }}> You have no account yet?</p>
+              <Link
+                to={`/check-email`}
+                className="enter-code"
+                style={{ color: "#39ff00" }}
+              >
+                Register
+              </Link>
+            </div>
           </div>
           <div className="circle circle-two"></div>
         </div>
