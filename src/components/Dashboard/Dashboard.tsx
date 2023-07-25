@@ -1,5 +1,5 @@
 import Cookies from "js-cookie";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface DashboardMessage {
@@ -8,36 +8,87 @@ interface DashboardMessage {
 }
 
 export const Dashboard: React.FC = () => {
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState<string>("");
   const [messageFromServer, setMessageFromServer] = useState<string | null>(
     null
   );
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [sentMessages, setSentMessages] = useState<string[]>([]);
   const navigate = useNavigate();
-  const socketRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
-    initializeWebSocket();
-    return () => {
-      if (socketRef.current) {
-        socketRef.current.close();
-      }
-    };
-  }, []);
+    const initializeWebSocket = () => {
+      const token = localStorage.getItem("token");
+      const socket = new WebSocket(
+        `ws://simple-chat-api-production.up.railway.app/ws?token=${token}`
+      );
 
-  const initializeWebSocket = () => {
+      const handleSocketOpen = () => {
+        console.log("WebSocket соединение установлено.");
+        socket.send("Hello, сервер!");
+      };
+
+      const handleSocketMessage = (event: MessageEvent) => {
+        const data: DashboardMessage = JSON.parse(event.data);
+        console.log("Получено сообщение от сервера:", data);
+
+        if (data.message) {
+          setMessageFromServer(data.message);
+        }
+
+        if (data.errorMessage) {
+          setErrorMessage(data.errorMessage);
+          localStorage.removeItem("token");
+          Cookies.remove("token");
+        }
+      };
+
+      const handleSocketError = (error: Event) => {
+        console.error("Ошибка WebSocket соединения:", error);
+      };
+
+      const handleSocketClose = (event: CloseEvent) => {
+        console.log("WebSocket соединение закрыто.");
+        if (event.code === 1000) {
+          console.log("WebSocket соединение закрыто успешно.");
+        } else {
+          console.error("Ошибка WebSocket соединения:", event.reason);
+        }
+      };
+
+      socket.addEventListener("open", handleSocketOpen);
+      socket.addEventListener("message", handleSocketMessage);
+      socket.addEventListener("error", handleSocketError);
+      socket.addEventListener("close", handleSocketClose);
+
+      return socket;
+    };
+
+    const socket = initializeWebSocket();
+
+    return () => {
+      socket.close();
+    };
+  }, [navigate]);
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.target.value);
+  };
+
+  const handleSendData = () => {
     const token = localStorage.getItem("token");
     const socket = new WebSocket(
       `ws://simple-chat-api-production.up.railway.app/ws?token=${token}`
     );
 
-    socket.onopen = () => {
+    const handleSocketOpen = () => {
       console.log("WebSocket соединение установлено.");
-      socket.send("Hello, сервер!");
+      socket.send(inputValue);
+      setSentMessages((prevMessages) => [...prevMessages, inputValue]);
+      setInputValue("");
     };
 
-    socket.onmessage = (event: MessageEvent) => {
+    const handleSocketMessage = (event: MessageEvent) => {
       const data: DashboardMessage = JSON.parse(event.data);
       console.log("Получено сообщение от сервера:", data);
 
@@ -47,43 +98,25 @@ export const Dashboard: React.FC = () => {
 
       if (data.errorMessage) {
         setErrorMessage(data.errorMessage);
-
         localStorage.removeItem("token");
         Cookies.remove("token");
+        alert('Token is expired')
+        navigate("/sign-in");
       }
     };
 
-    socket.onerror = (error: Event) => {
+    const handleSocketError = (error: Event) => {
       console.error("Ошибка WebSocket соединения:", error);
-      navigate("/");
     };
 
-    socket.onclose = (event: CloseEvent) => {
+    const handleSocketClose = () => {
       console.log("WebSocket соединение закрыто.");
-      if (event.code === 1000) {
-        console.log("WebSocket соединение закрыто успешно.");
-      } else {
-        console.error("Ошибка WebSocket соединения:", event.reason);
-        navigate("/");
-      }
     };
 
-    socketRef.current = socket;
-  };
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
-  };
-
-  const handleSendData = () => {
-    if (!socketRef.current) {
-      console.error("WebSocket соединение не установлено.");
-      return;
-    }
-
-    socketRef.current.send(inputValue);
-    setSentMessages((prevMessages) => [...prevMessages, inputValue]);
-    setInputValue("");
+    socket.addEventListener("open", handleSocketOpen);
+    socket.addEventListener("message", handleSocketMessage);
+    socket.addEventListener("error", handleSocketError);
+    socket.addEventListener("close", handleSocketClose);
   };
 
   return (
@@ -117,12 +150,6 @@ export const Dashboard: React.FC = () => {
         <div className="message-container">
           <h2 className="message-title">Message from Server:</h2>
           <p className="message-text">{messageFromServer}</p>
-        </div>
-      )}
-      {errorMessage && (
-        <div className="error-message-container">
-          <h2 className="error-message-title">Error:</h2>
-          <p className="error-message-text">{errorMessage}</p>
         </div>
       )}
     </div>
