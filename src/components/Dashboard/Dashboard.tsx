@@ -67,7 +67,9 @@ export const Dashboard: React.FC = () => {
     const socket = initializeWebSocket();
 
     return () => {
-      socket.close();
+      if (socket.readyState === 1) { // <-- This is important
+        socket.close();
+    }
     };
   }, [navigate]);
 
