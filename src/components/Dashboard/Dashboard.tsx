@@ -1,5 +1,5 @@
 import Cookies from "js-cookie";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface DashboardMessage {
@@ -15,18 +15,64 @@ export const Dashboard: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [sentMessages, setSentMessages] = useState<string[]>([]);
   const navigate = useNavigate();
-  const socketRef = useRef<WebSocket | null>(null);
 
   useEffect(() => {
-    initializeWebSocket();
-    return () => {
-      if (socketRef.current) {
-        socketRef.current.close();
-      }
-    };
-  }, []);
+    const initializeWebSocket = () => {
+      const token = localStorage.getItem("token");
+      const socket = new WebSocket(
+        `ws://simple-chat-api-production.up.railway.app/ws?token=${token}`
+      );
 
-  const initializeWebSocket = () => {
+      socket.onopen = () => {
+        console.log("WebSocket соединение установлено.");
+        socket.send("Hello, сервер!");
+      };
+
+      socket.onmessage = (event: MessageEvent) => {
+        const data: DashboardMessage = JSON.parse(event.data);
+        console.log("Получено сообщение от сервера:", data);
+
+        if (data.message) {
+          setMessageFromServer(data.message);
+        }
+
+        if (data.errorMessage) {
+          setErrorMessage(data.errorMessage);
+
+          localStorage.removeItem("token");
+          Cookies.remove("token");
+
+        }
+      };
+
+      socket.onerror = (error: Event) => {
+        console.error("Ошибка WebSocket соединения:", error);
+      };
+
+      socket.onclose = (event: CloseEvent) => {
+        console.log("WebSocket соединение закрыто.");
+        if (event.code === 1000) {
+          console.log("WebSocket соединение закрыто успешно.");
+        } else {
+          console.error("Ошибка WebSocket соединения:", event.reason);
+        }
+      };
+
+      return socket;
+    };
+
+    const socket = initializeWebSocket();
+
+    return () => {
+      socket.close();
+    };
+  }, [navigate]);
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.target.value);
+  };
+
+  const handleSendData = () => {
     const token = localStorage.getItem("token");
     const socket = new WebSocket(
       `ws://simple-chat-api-production.up.railway.app/ws?token=${token}`
@@ -34,7 +80,9 @@ export const Dashboard: React.FC = () => {
 
     socket.onopen = () => {
       console.log("WebSocket соединение установлено.");
-      socket.send("Hello, сервер!");
+      socket.send(inputValue);
+      setSentMessages((prevMessages) => [...prevMessages, inputValue]);
+      setInputValue("");
     };
 
     socket.onmessage = (event: MessageEvent) => {
@@ -50,40 +98,18 @@ export const Dashboard: React.FC = () => {
 
         localStorage.removeItem("token");
         Cookies.remove("token");
+
+        navigate('/sign-in')
       }
     };
 
     socket.onerror = (error: Event) => {
       console.error("Ошибка WebSocket соединения:", error);
-      navigate("/");
     };
 
-    socket.onclose = (event: CloseEvent) => {
+    socket.onclose = () => {
       console.log("WebSocket соединение закрыто.");
-      if (event.code === 1000) {
-        console.log("WebSocket соединение закрыто успешно.");
-      } else {
-        console.error("Ошибка WebSocket соединения:", event.reason);
-        navigate("/");
-      }
     };
-
-    socketRef.current = socket;
-  };
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(event.target.value);
-  };
-
-  const handleSendData = () => {
-    if (!socketRef.current) {
-      console.error("WebSocket соединение не установлено.");
-      return;
-    }
-
-    socketRef.current.send(inputValue);
-    setSentMessages((prevMessages) => [...prevMessages, inputValue]);
-    setInputValue("");
   };
 
   return (
