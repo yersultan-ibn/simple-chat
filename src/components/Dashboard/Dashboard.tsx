@@ -8,7 +8,7 @@ interface DashboardMessage {
 }
 
 export const Dashboard: React.FC = () => {
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState<string>("");
   const [messageFromServer, setMessageFromServer] = useState<string | null>(
     null
   );
@@ -23,12 +23,12 @@ export const Dashboard: React.FC = () => {
         `ws://simple-chat-api-production.up.railway.app/ws?token=${token}`
       );
 
-      socket.onopen = () => {
+      const handleSocketOpen = () => {
         console.log("WebSocket соединение установлено.");
         socket.send("Hello, сервер!");
       };
 
-      socket.onmessage = (event: MessageEvent) => {
+      const handleSocketMessage = (event: MessageEvent) => {
         const data: DashboardMessage = JSON.parse(event.data);
         console.log("Получено сообщение от сервера:", data);
 
@@ -38,18 +38,16 @@ export const Dashboard: React.FC = () => {
 
         if (data.errorMessage) {
           setErrorMessage(data.errorMessage);
-
           localStorage.removeItem("token");
           Cookies.remove("token");
-
         }
       };
 
-      socket.onerror = (error: Event) => {
+      const handleSocketError = (error: Event) => {
         console.error("Ошибка WebSocket соединения:", error);
       };
 
-      socket.onclose = (event: CloseEvent) => {
+      const handleSocketClose = (event: CloseEvent) => {
         console.log("WebSocket соединение закрыто.");
         if (event.code === 1000) {
           console.log("WebSocket соединение закрыто успешно.");
@@ -57,6 +55,11 @@ export const Dashboard: React.FC = () => {
           console.error("Ошибка WebSocket соединения:", event.reason);
         }
       };
+
+      socket.addEventListener("open", handleSocketOpen);
+      socket.addEventListener("message", handleSocketMessage);
+      socket.addEventListener("error", handleSocketError);
+      socket.addEventListener("close", handleSocketClose);
 
       return socket;
     };
@@ -78,14 +81,14 @@ export const Dashboard: React.FC = () => {
       `ws://simple-chat-api-production.up.railway.app/ws?token=${token}`
     );
 
-    socket.onopen = () => {
+    const handleSocketOpen = () => {
       console.log("WebSocket соединение установлено.");
       socket.send(inputValue);
       setSentMessages((prevMessages) => [...prevMessages, inputValue]);
       setInputValue("");
     };
 
-    socket.onmessage = (event: MessageEvent) => {
+    const handleSocketMessage = (event: MessageEvent) => {
       const data: DashboardMessage = JSON.parse(event.data);
       console.log("Получено сообщение от сервера:", data);
 
@@ -95,21 +98,24 @@ export const Dashboard: React.FC = () => {
 
       if (data.errorMessage) {
         setErrorMessage(data.errorMessage);
-
         localStorage.removeItem("token");
         Cookies.remove("token");
-
-        navigate('/sign-in')
+        navigate("/sign-in");
       }
     };
 
-    socket.onerror = (error: Event) => {
+    const handleSocketError = (error: Event) => {
       console.error("Ошибка WebSocket соединения:", error);
     };
 
-    socket.onclose = () => {
+    const handleSocketClose = () => {
       console.log("WebSocket соединение закрыто.");
     };
+
+    socket.addEventListener("open", handleSocketOpen);
+    socket.addEventListener("message", handleSocketMessage);
+    socket.addEventListener("error", handleSocketError);
+    socket.addEventListener("close", handleSocketClose);
   };
 
   return (
@@ -143,12 +149,6 @@ export const Dashboard: React.FC = () => {
         <div className="message-container">
           <h2 className="message-title">Message from Server:</h2>
           <p className="message-text">{messageFromServer}</p>
-        </div>
-      )}
-      {errorMessage && (
-        <div className="error-message-container">
-          <h2 className="error-message-title">Error:</h2>
-          <p className="error-message-text">{errorMessage}</p>
         </div>
       )}
     </div>
