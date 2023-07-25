@@ -100,6 +100,7 @@ export const Dashboard: React.FC = () => {
         setErrorMessage(data.errorMessage);
         localStorage.removeItem("token");
         Cookies.remove("token");
+        alert('Token is expired')
         navigate("/sign-in");
       }
     };
