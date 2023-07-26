@@ -1,5 +1,5 @@
 import Cookies from "js-cookie";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Dashboard.scss";
 interface DashboardMessage {
@@ -7,7 +7,12 @@ interface DashboardMessage {
   errorMessage: string;
 }
 
+const wsUrl = "ws://simple-chat-api-production.up.railway.app"
+// const wsUrl = "ws://localhost:4000"
+
+
 export const Dashboard: React.FC = () => {
+  const socketRef = useRef<WebSocket>();
   const [inputValue, setInputValue] = useState<string>("");
   const [messageFromServer, setMessageFromServer] = useState<string | null>(
     null
@@ -20,9 +25,10 @@ export const Dashboard: React.FC = () => {
   const initializeWebSocket = () => {
     const token = localStorage.getItem("token");
     const socket = new WebSocket(
-      `ws://localhost:4000/ws?token=${token}`
+      `${wsUrl}/ws?token=${token}`
     );
 
+    socketRef.current = socket
     setSocket(socket);
   };
 
@@ -56,12 +62,12 @@ export const Dashboard: React.FC = () => {
   };
 
   useEffect(() => {
+   if (socketRef.current) return
    initializeWebSocket()
   }, []);
 
   useEffect(() => {
     if (!socket) return
-
 
     socket.addEventListener("message", handleSocketMessage);
     socket.addEventListener("error", handleSocketError);
