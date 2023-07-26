@@ -15,111 +15,76 @@ export const Dashboard: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [sentMessages, setSentMessages] = useState<string[]>([]);
   const navigate = useNavigate();
+  const [socket, setSocket] = useState<WebSocket>()
+
+  const initializeWebSocket = () => {
+    const token = localStorage.getItem("token");
+    const socket = new WebSocket(
+      `ws://localhost:4000/ws?token=${token}`
+    );
+
+    setSocket(socket);
+  };
+
+  const handleSocketMessage = (event: MessageEvent) => {
+    console.log(event)
+    const data: DashboardMessage = JSON.parse(event.data);
+    console.log("Получено сообщение от сервера:", data);
+
+    if (data.message) {
+      setMessageFromServer(data.message);
+    }
+
+    if (data.errorMessage) {
+      setErrorMessage(data.errorMessage);
+      localStorage.removeItem("token");
+      Cookies.remove("token");
+    }
+  };
+
+  const handleSocketError = (error: Event) => {
+    console.error("Ошибка WebSocket соединения:", error);
+  };
+
+  const handleSocketClose = (event: CloseEvent) => {
+    console.log("WebSocket соединение закрыто.");
+    if (event.code === 1000) {
+      console.log("WebSocket соединение закрыто успешно.");
+    } else {
+      console.error("Ошибка WebSocket соединения:", event.reason);
+    }
+  };
 
   useEffect(() => {
-    const initializeWebSocket = () => {
-      const token = localStorage.getItem("token");
-      const socket = new WebSocket(
-        `ws://simple-chat-api-production.up.railway.app/ws?token=${token}`
-      );
+   initializeWebSocket()
+  }, []);
 
-      const handleSocketOpen = () => {
-        console.log("WebSocket соединение установлено.");
-        socket.send("Hello, сервер!");
-      };
+  useEffect(() => {
+    if (!socket) return
 
-      const handleSocketMessage = (event: MessageEvent) => {
-        const data: DashboardMessage = JSON.parse(event.data);
-        console.log("Получено сообщение от сервера:", data);
 
-        if (data.message) {
-          setMessageFromServer(data.message);
-        }
-
-        if (data.errorMessage) {
-          setErrorMessage(data.errorMessage);
-          localStorage.removeItem("token");
-          Cookies.remove("token");
-        }
-      };
-
-      const handleSocketError = (error: Event) => {
-        console.error("Ошибка WebSocket соединения:", error);
-      };
-
-      const handleSocketClose = (event: CloseEvent) => {
-        console.log("WebSocket соединение закрыто.");
-        if (event.code === 1000) {
-          console.log("WebSocket соединение закрыто успешно.");
-        } else {
-          console.error("Ошибка WebSocket соединения:", event.reason);
-        }
-      };
-
-      socket.addEventListener("open", handleSocketOpen);
-      socket.addEventListener("message", handleSocketMessage);
-      socket.addEventListener("error", handleSocketError);
-      socket.addEventListener("close", handleSocketClose);
-
-      return socket;
-    };
-
-    const socket = initializeWebSocket();
-
-    return () => {
-      if (socket.readyState === 1) { // <-- This is important
+    socket.addEventListener("message", handleSocketMessage);
+    socket.addEventListener("error", handleSocketError);
+    socket.addEventListener("close", handleSocketClose);
+ 
+     return () => {
+       if (socket.readyState === 1) { // <-- This is important
         socket.close();
-    }
-    };
-  }, [navigate]);
+       }
+     };
+  }, [socket])
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
   };
 
   const handleSendData = () => {
-    const token = localStorage.getItem("token");
-    const socket = new WebSocket(
-      `ws://simple-chat-api-production.up.railway.app/ws?token=${token}`
-    );
-
-    const handleSocketOpen = () => {
-      console.log("WebSocket соединение установлено.");
-      socket.send(inputValue);
-      setSentMessages((prevMessages) => [...prevMessages, inputValue]);
-      setInputValue("");
-    };
-
-    const handleSocketMessage = (event: MessageEvent) => {
-      const data: DashboardMessage = JSON.parse(event.data);
-      console.log("Получено сообщение от сервера:", data);
-
-      if (data.message) {
-        setMessageFromServer(data.message);
-      }
-
-      if (data.errorMessage) {
-        setErrorMessage(data.errorMessage);
-        localStorage.removeItem("token");
-        Cookies.remove("token");
-        alert("Token is expired");
-        navigate("/sign-in");
-      }
-    };
-
-    const handleSocketError = (error: Event) => {
-      console.error("Ошибка WebSocket соединения:", error);
-    };
-
-    const handleSocketClose = () => {
-      console.log("WebSocket соединение закрыто.");
-    };
-
-    socket.addEventListener("open", handleSocketOpen);
-    socket.addEventListener("message", handleSocketMessage);
-    socket.addEventListener("error", handleSocketError);
-    socket.addEventListener("close", handleSocketClose);
+    if (!socket) return
+    // add condition: return if socket is still connectioning
+    console.log(inputValue)
+    socket.send(inputValue)
   };
+  
   const getCurrentDate = () => {
     const now = new Date();
     const day = now.getDate();
