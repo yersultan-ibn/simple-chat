@@ -1,12 +1,11 @@
 // SetPassword.js
-import { Box, Button } from "@mui/material";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { ThemeButtons } from "../helpers/theme-buttons";
-import { FormField } from "../helpers/form-field";
-import { FormSubmit } from "../helpers/form-submit";
+import { ThemeButtons } from "../helpers/ThemeButtons";
+import { FormField } from "../helpers/FormField";
+import { FormSubmit } from "../helpers/FormSubmit";
 import { IoIosArrowBack } from "react-icons/io";
 import { RequestMethodsEnum, makeRequest } from "../../tools/request";
 import Cookies from "js-cookie";
@@ -57,15 +56,11 @@ export const SignIn = () => {
   };
 
   return (
-    <Box
-      className="signup-page"
-      component="div"
-      sx={{ background: selectedTheme }}
-    >
+    <div className="signup-page" style={{ background: selectedTheme }}>
       <Link to="/" className="arrow-main">
         <IoIosArrowBack />
       </Link>
-      <Box className="container">
+      <div className="container">
         <div className="login-container">
           <div className="form-error form-error-top">{showError}</div>
           <div className="circle circle-one"></div>
@@ -106,7 +101,7 @@ export const SignIn = () => {
           <div className="circle circle-two"></div>
         </div>
         <ThemeButtons handleThemeChange={handleThemeChange} />
-      </Box>
-    </Box>
+      </div>
+    </div>
   );
 };

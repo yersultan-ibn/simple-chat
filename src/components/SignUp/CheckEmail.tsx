@@ -1,11 +1,10 @@
-import { Box, Button } from "@mui/material";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { ThemeButtons } from "../helpers/theme-buttons";
-import { FormField } from "../helpers/form-field";
-import { FormSubmit } from "../helpers/form-submit";
+import { ThemeButtons } from "../helpers/ThemeButtons";
+import { FormField } from "../helpers/FormField";
+import { FormSubmit } from "../helpers/FormSubmit";
 import { RequestMethodsEnum, makeRequest } from "../../tools/request";
 
 const validationSchema = Yup.object().shape({
@@ -45,12 +44,8 @@ export const CheckEmail = () => {
   };
 
   return (
-    <Box
-      className="signup-page"
-      component="div"
-      sx={{ background: selectedTheme }}
-    >
-      <Box className="container">
+    <div className="signup-page" style={{ background: selectedTheme }}>
+      <div className="container">
         <div className="login-container">
           <div className="form-error form-error-top">{showError}</div>
           <div className="circle circle-one"></div>
@@ -90,7 +85,7 @@ export const CheckEmail = () => {
           <div className="circle circle-two"></div>
         </div>
         <ThemeButtons handleThemeChange={handleThemeChange} />
-      </Box>
-    </Box>
+      </div>
+    </div>
   );
 };

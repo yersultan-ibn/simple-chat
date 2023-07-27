@@ -1,13 +1,5 @@
 import React, { createContext, useState, useContext } from "react";
-import { User } from "../types";
-
-// Определите тип данных выбранного пользователя
-
-// Определите тип для контекста
-interface UserContextType {
-  selectedUser: User | null;
-  setSelectedUser: React.Dispatch<React.SetStateAction<User | null>>;
-}
+import { User, UserContextType } from "../types";
 
 const UserContext = createContext<UserContextType>({} as UserContextType);
 

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { members } from "../../constants";
 import { useUserContext } from "../../context/UserContext";
-export const ChatMembers = () => {
-  const [darkMode, setDarkMode] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
+export const ChatMembers: React.FC = () => {
+  const [darkMode, setDarkMode] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const { selectedUser, setSelectedUser } = useUserContext();
 
   const handleUserSelection = (user: any) => {

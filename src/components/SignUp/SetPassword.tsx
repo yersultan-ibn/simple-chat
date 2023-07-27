@@ -1,12 +1,11 @@
 // SetPassword.js
-import { Box, Button } from "@mui/material";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useState } from "react";
-import { ThemeButtons } from "../helpers/theme-buttons";
-import { FormField } from "../helpers/form-field";
-import { FormSubmit } from "../helpers/form-submit";
+import { ThemeButtons } from "../helpers/ThemeButtons";
+import { FormField } from "../helpers/FormField";
+import { FormSubmit } from "../helpers/FormSubmit";
 import { IoIosArrowBack } from "react-icons/io";
 import { RequestMethodsEnum, makeRequest } from "../../tools/request";
 
@@ -26,7 +25,7 @@ const validationSchema = Yup.object().shape({
 export const SetPassword = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const email = searchParams.get("email");
+  const email = searchParams.get("email") ?? undefined;
   const navigate = useNavigate();
   const [showError, setShowError] = useState("");
   const [selectedTheme, setSelectedTheme] = useState("");
@@ -53,15 +52,11 @@ export const SetPassword = () => {
   };
 
   return (
-    <Box
-      className="signup-page"
-      component="div"
-      sx={{ background: selectedTheme }}
-    >
+    <div className="signup-page" style={{ background: selectedTheme }}>
       <Link to="/check-email" className="arrow-main">
         <IoIosArrowBack />
       </Link>
-      <Box className="container">
+      <div className="container">
         <div className="login-container">
           <div className="form-error form-error-top">{showError}</div>
           <div className="circle circle-one"></div>
@@ -92,7 +87,7 @@ export const SetPassword = () => {
           <div className="circle circle-two"></div>
         </div>
         <ThemeButtons handleThemeChange={handleThemeChange} />
-      </Box>
-    </Box>
+      </div>
+    </div>
   );
 };

@@ -1,6 +1,12 @@
 import { Field, ErrorMessage } from "formik";
+import { FormFieldProps } from "../../types";
 
-export const FormField = ({ name, placeholder, type, value }: any) => (
+export const FormField: React.FC<FormFieldProps> = ({
+  name,
+  placeholder,
+  type,
+  value,
+}) => (
   <>
     {name === "usernamecode" ? (
       <Field

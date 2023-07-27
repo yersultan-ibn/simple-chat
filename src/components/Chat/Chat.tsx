@@ -2,17 +2,16 @@ import Cookies from "js-cookie";
 import { useEffect, useRef, useState } from "react";
 import { wsUrl } from "../../constants";
 import { useNavigate } from "react-router-dom";
+import { NewMessage } from "../../types";
 
-export const Chat = () => {
+export const Chat: React.FC = () => {
   const socketRef = useRef<WebSocket>();
   const [inputValue, setInputValue] = useState<string>("");
   const [messageFromServer, setMessageFromServer] = useState<string | null>(
     null
   );
-  const [currentDate, setCurrentDate] = useState("");
-  const [newMessage, setNewMessage] = useState<
-    { email: string; message: string; date: string }[]
-  >([]);
+  const [currentDate, setCurrentDate] = useState<string>("");
+  const [newMessage, setNewMessage] = useState<NewMessage[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [sentMessages, setSentMessages] = useState("");
   const navigate = useNavigate();
@@ -26,11 +25,10 @@ export const Chat = () => {
     socketRef.current = socket;
     setSocket(socket);
   };
-  const formatDate = (dateString: any): any => {
+
+  const formatDate = (dateString: string): any => {
     if (dateString) {
-      // Extract the date part (YYYY-MM-DD) from the input string
       const datePart = dateString.split("T")[0];
-      // Extract the time part (HH:mm:ss) from the input string and keep only the HH:mm part
       const timePart = dateString.split("T")[1].slice(0, 5);
       return `${datePart} ${timePart}`;
     } else {
@@ -101,11 +99,11 @@ export const Chat = () => {
   const handleSendData = () => {
     if (!socket) return;
     if (inputValue.trim() === "") return;
-    // add condition: return if socket is still connectioning
     console.log(inputValue);
     socket.send(inputValue);
     setSentMessages(inputValue);
   };
+
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       handleSendData();

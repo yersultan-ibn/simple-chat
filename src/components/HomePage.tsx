@@ -11,9 +11,9 @@ import { SetPassword } from "./SignUp/SetPassword";
 import { SignIn } from "./SignIn/SignIn";
 import { TransitionGroup, CSSTransition } from "react-transition-group";
 import { Suspense, useEffect, useState } from "react";
-import Loader from "./Loader/Loader";
 import { Dashboard } from "./Dashboard/Dashboard";
 import { PrivateRoute } from "./PrivateRoute/PrivateRoute";
+import { Loader } from "./index";
 
 export const HomePage = () => {
   const [loading, setLoading] = useState<boolean>(true);

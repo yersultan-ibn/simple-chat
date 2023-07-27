@@ -3,8 +3,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Dashboard.scss";
 import { members } from "../../constants";
-import { ChatMembers } from "../ChatMembers/ChatMembers";
-import { Chat } from "../Chat/Chat";
+import { ChatMembers } from "../index";
+import { Chat } from "../index";
 import { UserProfile } from "../UserProfile/UserProfile";
 import { UserProvider } from "../../context/UserContext";
 

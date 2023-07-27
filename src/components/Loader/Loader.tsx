@@ -6,7 +6,7 @@ interface LoaderProps {
   text: string;
 }
 
-const Loader: FC<LoaderProps> = ({ text }) => {
+export const Loader: FC<LoaderProps> = ({ text }) => {
   return (
     <div className="spinner">
       <div className="loadingio-spinner-ellipsis-57ekl48z0o3">
@@ -22,5 +22,3 @@ const Loader: FC<LoaderProps> = ({ text }) => {
     </div>
   );
 };
-
-export default Loader;
