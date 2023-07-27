@@ -1,6 +1,6 @@
-import React, { FC } from 'react';
+import React, { FC } from "react";
 
-import './style.scss';
+import "./style.scss";
 
 interface LoaderProps {
   text: string;

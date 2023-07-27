@@ -7,9 +7,8 @@ interface DashboardMessage {
   errorMessage: string;
 }
 
-const wsUrl = "ws://simple-chat-api-production.up.railway.app"
+const wsUrl = "ws://simple-chat-api-production.up.railway.app";
 // const wsUrl = "ws://localhost:4000"
-
 
 export const Dashboard: React.FC = () => {
   const socketRef = useRef<WebSocket>();
@@ -17,34 +16,50 @@ export const Dashboard: React.FC = () => {
   const [messageFromServer, setMessageFromServer] = useState<string | null>(
     null
   );
+  const [currentDate, setCurrentDate] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [sentMessages, setSentMessages] = useState<string[]>([]);
+  const [sentMessages, setSentMessages] = useState<
+    { email: string; message: string; date: string }[]
+  >([]);
   const navigate = useNavigate();
-  const [socket, setSocket] = useState<WebSocket>()
+  const [socket, setSocket] = useState<WebSocket>();
 
   const initializeWebSocket = () => {
     const token = localStorage.getItem("token");
-    const socket = new WebSocket(
-      `${wsUrl}/ws?token=${token}`
-    );
+    const socket = new WebSocket(`${wsUrl}/ws?token=${token}`);
 
-    socketRef.current = socket
+    socketRef.current = socket;
     setSocket(socket);
+  };
+  const formatDate = (dateString: string): string => {
+    // Extract the date part (YYYY-MM-DD) from the input string
+    const datePart = dateString.split("T")[0];
+    // Extract the time part (HH:mm:ss) from the input string and keep only the HH:mm part
+    const timePart = dateString.split("T")[1].slice(0, 5);
+    return `${datePart} ${timePart}`;
   };
 
   const handleSocketMessage = (event: MessageEvent) => {
-    console.log(event)
-    const data: DashboardMessage = JSON.parse(event.data);
+    console.log(event);
+    const data = JSON.parse(event.data);
     console.log("Получено сообщение от сервера:", data);
+    const conversionData = formatDate(data.date);
+    setCurrentDate(conversionData);
 
     if (data.message) {
       setMessageFromServer(data.message);
+      setSentMessages((prevState) => [
+        ...prevState,
+        { email: data.email, message: data.message, date: conversionData },
+      ]);
+      setInputValue("");
     }
 
     if (data.errorMessage) {
       setErrorMessage(data.errorMessage);
       localStorage.removeItem("token");
       Cookies.remove("token");
+      navigate("/sign-in");
     }
   };
 
@@ -62,46 +77,36 @@ export const Dashboard: React.FC = () => {
   };
 
   useEffect(() => {
-   if (socketRef.current) return
-   initializeWebSocket()
+    if (socketRef.current) return;
+    initializeWebSocket();
   }, []);
 
   useEffect(() => {
-    if (!socket) return
+    if (!socket) return;
 
     socket.addEventListener("message", handleSocketMessage);
     socket.addEventListener("error", handleSocketError);
     socket.addEventListener("close", handleSocketClose);
- 
-     return () => {
-       if (socket.readyState === 1) { // <-- This is important
+
+    return () => {
+      if (socket.readyState === 1) {
+        // <-- This is important
         socket.close();
-       }
-     };
-  }, [socket])
+      }
+    };
+  }, [socket]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
   };
 
   const handleSendData = () => {
-    if (!socket) return
+    if (!socket) return;
+    if (inputValue.trim() === "") return;
     // add condition: return if socket is still connectioning
-    console.log(inputValue)
-    socket.send(inputValue)
+    console.log(inputValue);
+    socket.send(inputValue);
   };
-  
-  const getCurrentDate = () => {
-    const now = new Date();
-    const day = now.getDate();
-    const month = now.toLocaleString("default", { month: "long" });
-    const year = now.getFullYear();
-
-    const formattedDate = `${day} ${month} ${year}`;
-
-    return formattedDate;
-  };
-  const currentDate = getCurrentDate();
   return (
     <>
       <div className="home-page__content messages-page">
@@ -207,42 +212,20 @@ export const Dashboard: React.FC = () => {
                   </div>
                   <div className="chat__content pt-4 px-3">
                     <ul className="chat__list-messages">
-                      <li>
-                        <div className="chat__time">{currentDate}</div>
-                        <div className="chat__bubble chat__bubble--you">
-                          Ассаляму алейкум, Ибрагим! Как ты?
-                        </div>
-                      </li>
-
-                      <li>
-                        <div className="chat__bubble chat__bubble--me">
-                          Ва алейкум ассалям, Али! Всё хорошо, спасибо. Как твои
-                          дела?
-                        </div>
-                      </li>
-                      <li>
-                        <div className="chat__bubble chat__bubble--you">
-                          Алхамдулиллах, у меня тоже всё отлично. Сегодня был
-                          занят на работе, но рад видеть тебя. Как проходит
-                          месяц Рамадан для тебя?
-                        </div>
-                      </li>
-                      <li>
-                        <div className="chat__time">07:14</div>
-                        <div className="chat__bubble chat__bubble--me">
-                          О, месяц Рамадан идет хорошо. Испытание, но также
-                          благословение. Постятся ли твои родители и семья?
-                        </div>
-                      </li>
-
-                      {sentMessages.map((message, index) => (
-                        <li key={index}>
-                          <div className="chat__time">{currentDate}</div>
-                          <div className="chat__bubble chat__bubble--you">
-                            {message}
-                          </div>
-                        </li>
-                      ))}
+                      {sentMessages.map((messageData, index) =>
+                        // Check if the message is "Connected" and skip rendering it
+                        messageData.message === "Connected" ? null : (
+                          <li key={index}>
+                            <div className="chat__time">{messageData.date}</div>
+                            <div className="chat__time">
+                              {messageData.email}
+                            </div>
+                            <div className="chat__bubble chat__bubble--you">
+                              {messageData.message}
+                            </div>
+                          </li>
+                        )
+                      )}
                     </ul>
                   </div>
                   <div className="chat__send-container px-2 px-md-3 pt-1 pt-md-3">
