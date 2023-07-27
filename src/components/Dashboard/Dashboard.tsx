@@ -40,9 +40,17 @@ export const Dashboard: React.FC = () => {
   };
 
   const handleSocketMessage = (event: MessageEvent) => {
-    console.log(event);
     const data = JSON.parse(event.data);
-    console.log("Получено сообщение от сервера:", data);
+   
+    if (data.errorMessage) {
+      setErrorMessage(data.errorMessage);
+      localStorage.removeItem("token");
+      Cookies.remove("token");
+      navigate("/sign-in");
+
+      return 
+    }
+    
     const conversionData = formatDate(data.date);
     setCurrentDate(conversionData);
 
@@ -55,12 +63,6 @@ export const Dashboard: React.FC = () => {
       setInputValue("");
     }
 
-    if (data.errorMessage) {
-      setErrorMessage(data.errorMessage);
-      localStorage.removeItem("token");
-      Cookies.remove("token");
-      navigate("/sign-in");
-    }
   };
 
   const handleSocketError = (error: Event) => {
