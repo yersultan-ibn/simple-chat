@@ -1,3 +1,5 @@
+export const wsUrl = "ws://simple-chat-api-production.up.railway.app";
+
 export const members = [
   {
     name: "Mark Zuckerberg",
@@ -165,5 +167,3 @@ export const members = [
     status: "Coding my dreams into reality! ✨",
   },
 ];
-
-export const wsUrl = "ws://simple-chat-api-production.up.railway.app";

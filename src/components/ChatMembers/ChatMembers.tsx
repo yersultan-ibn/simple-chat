@@ -3,6 +3,7 @@ import { members } from "../../constants";
 import { useUserContext } from "../../context/UserContext";
 export const ChatMembers = () => {
   const [darkMode, setDarkMode] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const { selectedUser, setSelectedUser } = useUserContext();
 
   const handleUserSelection = (user: any) => {
@@ -24,6 +25,10 @@ export const ChatMembers = () => {
   const handleGlobalTheme = () => {
     toggleDarkMode();
   };
+
+  const filteredMembers = members.filter((user) =>
+    user.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <div className="col-12 col-md-4 col-lg-5 col-xl-3 px-0 messages-page__list-scroll">
@@ -52,6 +57,7 @@ export const ChatMembers = () => {
             className="form-control custom-form"
             id="search"
             placeholder="Search ..."
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
           <button type="submit" className="custom-form__search-submit">
             <svg
@@ -69,7 +75,7 @@ export const ChatMembers = () => {
       </div>
 
       <ul className="messages-page__list pb-5 px-1 px-md-3">
-        {members.map((user, index) => (
+        {filteredMembers.map((user, index) => (
           <li
             className={`messaging-member ${
               selectedUser === user ? "messaging-member--active" : ""

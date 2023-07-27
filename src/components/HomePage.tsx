@@ -16,7 +16,7 @@ import { Dashboard } from "./Dashboard/Dashboard";
 import { PrivateRoute } from "./PrivateRoute/PrivateRoute";
 
 export const HomePage = () => {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     setTimeout(() => {
