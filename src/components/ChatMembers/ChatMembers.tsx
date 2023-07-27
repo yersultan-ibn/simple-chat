@@ -1,24 +1,27 @@
 import { useEffect, useState } from "react";
 import { members } from "../../constants";
-
+import { useUserContext } from "../../context/UserContext";
 export const ChatMembers = () => {
   const [darkMode, setDarkMode] = useState(false);
+  const { selectedUser, setSelectedUser } = useUserContext();
 
-  // Function to toggle dark mode
+  const handleUserSelection = (user: any) => {
+    setSelectedUser(user);
+  };
+
   const toggleDarkMode = () => {
     setDarkMode((prevMode) => !prevMode);
   };
 
   useEffect(() => {
-    // Add or remove the "dark-mode" className from the body element
     if (darkMode) {
       document.body.classList.add("dark-mode");
     } else {
       document.body.classList.remove("dark-mode");
     }
   }, [darkMode]);
+
   const handleGlobalTheme = () => {
-    // Call the toggleDarkMode function when you want to toggle the dark mode
     toggleDarkMode();
   };
 
@@ -67,7 +70,13 @@ export const ChatMembers = () => {
 
       <ul className="messages-page__list pb-5 px-1 px-md-3">
         {members.map((user, index) => (
-          <li className="messaging-member messaging-member--new messaging-member--online">
+          <li
+            className={`messaging-member ${
+              selectedUser === user ? "messaging-member--active" : ""
+            }`}
+            key={index}
+            onClick={() => handleUserSelection(user)}
+          >
             <div className="messaging-member__wrapper">
               <div className="messaging-member__avatar">
                 <img src={user.img} alt="Bessie Cooper" />

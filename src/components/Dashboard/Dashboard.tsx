@@ -6,6 +6,7 @@ import { members } from "../../constants";
 import { ChatMembers } from "../ChatMembers/ChatMembers";
 import { Chat } from "../Chat/Chat";
 import { UserProfile } from "../UserProfile/UserProfile";
+import { UserProvider } from "../../context/UserContext";
 
 // const wsUrl = "ws://localhost:4000"
 
@@ -15,9 +16,11 @@ export const Dashboard: React.FC = () => {
       <div className="home-page__content messages-page">
         <div className="container-fluid h-100">
           <div className="px-0 h-100">
-            <ChatMembers />
-            <Chat />
-            <UserProfile />
+            <UserProvider>
+              <ChatMembers />
+              <Chat />
+              <UserProfile />
+            </UserProvider>
           </div>
         </div>
       </div>

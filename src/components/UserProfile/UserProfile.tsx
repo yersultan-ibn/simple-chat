@@ -1,8 +1,17 @@
+import { useUserContext } from "../../context/UserContext";
+
 export const UserProfile = () => {
+  const { selectedUser } = useUserContext();
+
+  if (!selectedUser) {
+    return null;
+  }
+
+  console.log(selectedUser);
   return (
     <div className="user-profile">
       <div className="user-profile__close d-flex d-xl-none">
-        <svg
+        {/* <svg
           xmlns="http://www.w3.org/2000/svg"
           className="svg-icon"
           viewBox="0 0 38.8 38.9"
@@ -17,59 +26,38 @@ export const UserProfile = () => {
               fill="#d87232"
             />
           </g>
-        </svg>
+        </svg> */}
       </div>
       <div className="user-profile__wrapper">
         <div className="user-profile__avatar">
-          <img
-            src="https://randomuser.me/api/portraits/women/56.jpg"
-            alt="Jenny Smith"
-            loading="lazy"
-          />
+          <img src={selectedUser.img} alt={selectedUser.name} />
         </div>
         <div className="user-profile__details mt-1">
-          <span className="user-profile__name">Jenny Smith</span>
-          <span className="user-profile__phone">(025) 015-234-567</span>
-          <span className="user-profile__location">
-            New York, United States
-          </span>
+          <span className="user-profile__name">{selectedUser.name}</span>
+          <span className="user-profile__phone">{selectedUser.phone}</span>
+          <span className="user-profile__location">{selectedUser.country}</span>
         </div>
         <div className="user-profile__description">
-          <p>
-            Fly me to the moon 🌙 If you feel like your life is a routine, step
-            back and take a deep breath.
-          </p>
+          <p>{selectedUser.status}</p>
         </div>
         <div className="user-profile__learning mt-4">
           <span className="user-profile__label">Social Medias</span>
           <ul className="user-profile__tags user-profile__tags--primary mt-2">
-            <li>
-              <a href="https://www.instagram.com/tiantsoa_sh/" target="_blank">
-                Instagram
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://www.linkedin.com/in/tiantsoa-rabemananjara-254655152/"
-                target="_blank"
-              >
-                Linkedin
-              </a>
-            </li>
-            <li>
-              <a href="https://codepen.io/tiantsoa" target="_blank">
-                Codepen
-              </a>
-            </li>
+            {selectedUser.socialMedia.map((item, i) => (
+              <li key={i}>
+                <a href={item.link} target="_blank">
+                  {item.name}
+                </a>
+              </li>
+            ))}
           </ul>
         </div>
         <div className="user-profile__hobbies">
           <span className="user-profile__label">Activities</span>
           <ul className="user-profile__tags user-profile__tags--secondary mt-2">
-            <li>Biking</li>
-            <li>Cooking</li>
-            <li>Traveling</li>
-            <li>Grahic design</li>
+            {selectedUser.activities.map((item, i) => (
+              <li key={i}>{item}</li>
+            ))}
           </ul>
         </div>
       </div>
