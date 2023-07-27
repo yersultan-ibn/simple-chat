@@ -31,14 +31,6 @@ export const SignIn = () => {
   const [showError, setShowError] = useState("");
   const [selectedTheme, setSelectedTheme] = useState("");
 
-  // useEffect(() => {
-  //   // Check if the user is already authenticated
-  //   const storedToken = localStorage.getItem("token");
-  //   if (storedToken) {
-  //     navigate(`/`);
-  //   }
-  // }, [navigate]);
-
   const handleSignIn = async (values: any) => {
     try {
       const data = await makeRequest({
@@ -50,14 +42,9 @@ export const SignIn = () => {
         method: RequestMethodsEnum.POST,
       });
 
-      const token = data.token;
-
-      // Сохраняем токен в cookie
-      localStorage.setItem("token", token);
-      Cookies.set("token", token);
-
-      console.log(token);
-
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("email", values.username);
+      console.log(values.username);
       navigate(`/`);
     } catch (error: any) {
       setShowError("User not registered");
