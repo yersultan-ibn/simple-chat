@@ -1,89 +1,89 @@
-# Простой чат (Simple Chat)
+# Simple Chat
 
-Добро пожаловать в Простой чат — простое веб-приложение для обмена сообщениями в режиме реального времени. Проект основан на технологии WebSocket и позволяет пользователям общаться между собой без необходимости перезагрузки страницы. Простота использования и удобный интерфейс делают этот чат отличным инструментом для общения с друзьями или коллегами.
+Welcome to Simple Chat - a straightforward web application for real-time messaging. The project is based on WebSocket technology, enabling users to communicate with each other without the need to refresh the page. Its user-friendly interface and simplicity make it an excellent tool for communicating with friends or colleagues.
 
-## Ключевые особенности
+## Key Features
 
-- Реальное время: Общение между пользователями осуществляется в режиме реального времени, что позволяет быстро и легко обмениваться сообщениями.
+- Real-Time Communication: Users can exchange messages in real-time, allowing for quick and easy communication.
 
-- Простой интерфейс: Интуитивно понятный интерфейс делает использование чата максимально простым и удобным.
+- Simple Interface: An intuitive and straightforward interface makes using the chat as easy and convenient as possible.
 
-- Авторизация: Для доступа к чату необходимо авторизоваться. Пользователи могут войти в систему, используя свои учетные данные.
+- Authorization: Access to the chat requires user authentication. Users can log in using their credentials.
 
-- Стильная тема: Чат имеет стильную тему, которая приятно смотрится и создает приятную атмосферу общения.
+- Stylish Theme: The chat has a stylish theme that enhances the messaging experience and creates a pleasant communication atmosphere.
 
-## Ссылка на демонстрацию
+## Demo
 
-[Простой чат - Демо](https://chat-ws.vercel.app/)
+[Simple Chat - Demo](https://chat-ws.vercel.app/)
 
-## Запуск проекта локально
+## Running the Project Locally
 
-1. Клонируйте репозиторий на свой компьютер:
+1. Clone the repository to your computer:
 
 ```bash
 git clone https://github.com/your-username/simple-chat.git
 ```
 
-2. Перейдите в папку проекта:
+2. Navigate to the project folder:
 
 ```bash
 cd simple-chat
 ```
 
-3. Установите зависимости:
+3. Install the dependencies:
 
 ```bash
 npm install
 ```
 
-4. Запустите приложение:
+4. Start the application:
 
 ```bash
 npm start
 ```
 
-Приложение будет доступно по адресу [http://localhost:3000](http://localhost:3000).
+The application will be available at [http://localhost:3000](http://localhost:3000).
 
-## Технологии
+## Technologies Used
 
-- React: JavaScript-библиотека для создания пользовательских интерфейсов.
+- React: JavaScript library for building user interfaces.
 
-- WebSocket: Протокол для обмена данными между клиентом и сервером в режиме реального времени.
+- WebSocket: Protocol for real-time data exchange between the client and server.
 
-- React Router: Библиотека для навигации между страницами в React-приложениях.
+- React Router: Library for navigation between pages in React applications.
 
-- Vercel: Платформа для развертывания и хостинга веб-приложений.
+- Vercel: Platform for deploying and hosting web applications.
 
-## Внесение изменений и разработка
+## Contribution and Development
 
-Вы можете свободно вносить изменения и разрабатывать этот проект дальше. Если вы хотите внести свой вклад, пожалуйста, следуйте этим шагам:
+You are free to make changes and further develop this project. If you wish to contribute, please follow these steps:
 
-1. Форкните этот репозиторий на GitHub.
+1. Fork this repository on GitHub.
 
-2. Создайте ветку для ваших изменений:
+2. Create a branch for your changes:
 
 ```bash
 git checkout -b my-feature
 ```
 
-3. Внесите необходимые изменения и коммиты:
+3. Make necessary changes and commits:
 
 ```bash
 git add .
-git commit -m "Добавить новую функциональность"
+git commit -m "Add new functionality"
 ```
 
-4. Запушьте изменения в ваш репозиторий:
+4. Push the changes to your repository:
 
 ```bash
 git push origin my-feature
 ```
 
-5. Создайте Pull Request (PR) из вашей ветки в основной репозиторий.
+5. Create a Pull Request (PR) from your branch to the main repository.
 
-Мы будем рады принять ваши изменения и внести их в проект!
+We would be happy to review and incorporate your changes into the project!
 
-## Авторы
+## Authors
 
-- Nurlykhan (@ibn-salamat) - [GitHub профиль](https://github.com/ibn-salamat)
-- Yersultan (@yersultan-ibn) - [GitHub профиль](https://github.com/yersultan-ibn)
+- Nurlykhan (@ibn-salamat) - [GitHub Profile](https://github.com/ibn-salamat)
+- Yersultan (@yersultan-ibn) - [GitHub Profile](https://github.com/yersultan-ibn)
