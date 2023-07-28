@@ -44,7 +44,7 @@ export const Chat: React.FC = () => {
 
     if (data.message) {
       setMessageFromServer(data.message);
-      setNewMessage((prevState) => [
+      setNewMessages((prevState) => [
         ...prevState,
         { email: data.email, message: data.message, date: conversionData },
       ]);
