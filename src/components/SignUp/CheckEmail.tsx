@@ -73,15 +73,15 @@ export const CheckEmail = () => {
                 <FormSubmit buttonText="Next" />
               </Form>
             </Formik>
-            <div className="register-forget opacity">
-              {showError && (
-                <Link
-                  to={`/check-confirm-code?email=${emailState}`}
-                  className="enter-code"
-                >
-                  Enter code
-                </Link>
-              )}
+            <div className="have-account">
+              <p>Have an account? </p>
+              <Link
+                to={`/sign-in`}
+                className="enter-code"
+                style={{ color: "#39ff00" }}
+              >
+                Log in
+              </Link>
             </div>
           </div>
           <div className="circle circle-two"></div>

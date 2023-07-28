@@ -74,8 +74,8 @@ export const SignIn: React.FC = () => {
                 <FormSubmit buttonText="Log in" />
               </Form>
             </Formik>
-            <div className="register-forget opacity">
-              <p style={{ color: "#fff" }}> You have no account yet?</p>
+            <div className="have-account">
+              <p> You have no account yet? </p>
               <Link
                 to={`/check-email`}
                 className="enter-code"
