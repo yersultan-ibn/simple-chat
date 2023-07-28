@@ -11,7 +11,7 @@ export const Chat: React.FC = () => {
     null
   );
   const [currentDate, setCurrentDate] = useState<string>("");
-  const [newMessage, setNewMessage] = useState<NewMessage[]>([]);
+  const [newMessages, setNewMessages] = useState<NewMessage[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [sentMessages, setSentMessages] = useState("");
   const navigate = useNavigate();
@@ -192,8 +192,8 @@ export const Chat: React.FC = () => {
           </div>
           <div className="chat__content pt-4 px-3">
             <ul className="chat__list-messages">
-              {newMessage &&
-                newMessage.map((messageData: any, index: number) =>
+              {newMessages &&
+                newMessages.map((messageData: any, index: number) =>
                   messageData.message === "Connected" ? null : (
                     <li key={index}>
                       <div className="chat__time">
