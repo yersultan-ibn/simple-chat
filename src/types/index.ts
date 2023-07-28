@@ -16,7 +16,7 @@ export interface User {
   status: string;
 }
 
-export interface NewMessage {
+export interface Message {
   email: string;
   message: string;
   date: string;
