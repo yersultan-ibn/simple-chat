@@ -5,9 +5,8 @@ import { useState } from "react";
 import { ThemeButtons } from "../helpers/ThemeButtons";
 import { FormField } from "../helpers/FormField";
 import { FormSubmit } from "../helpers/FormSubmit";
-import { IoIosArrowBack } from "react-icons/io";
 import { RequestMethodsEnum, makeRequest } from "../../tools/request";
-
+import { FaSpinner } from "react-icons/fa";
 type SignInValues = {
   username: string;
   password: string;
@@ -45,9 +44,6 @@ export const SignIn: React.FC = () => {
 
   return (
     <div className="signup-page" style={{ background: selectedTheme }}>
-      <Link to="/" className="arrow-main">
-        <IoIosArrowBack />
-      </Link>
       <div className="container">
         <div className="login-container">
           <div className="form-error form-error-top">{showError}</div>
@@ -63,16 +59,22 @@ export const SignIn: React.FC = () => {
               initialValues={{ username: "", password: "" }}
               onSubmit={handleSignIn}
             >
-              <Form>
-                <FormField
-                  type="text"
-                  name="username"
-                  placeholder="Email"
-                  value={emailState}
-                />
-                <FormField type="text" name="password" placeholder="Password" />
-                <FormSubmit buttonText="Log in" />
-              </Form>
+              {({ isSubmitting }) => (
+                <Form>
+                  <FormField
+                    type="text"
+                    name="username"
+                    placeholder="Email"
+                    value={emailState}
+                  />
+                  <FormField
+                    type="text"
+                    name="password"
+                    placeholder="Password"
+                  />
+                  <FormSubmit buttonText="Log in" isSubmitting={isSubmitting} />
+                </Form>
+              )}
             </Formik>
             <div className="have-account">
               <p> You have no account yet? </p>

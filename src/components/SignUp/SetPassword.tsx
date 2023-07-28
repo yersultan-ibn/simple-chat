@@ -5,7 +5,6 @@ import { useState } from "react";
 import { ThemeButtons } from "../helpers/ThemeButtons";
 import { FormField } from "../helpers/FormField";
 import { FormSubmit } from "../helpers/FormSubmit";
-import { IoIosArrowBack } from "react-icons/io";
 import { RequestMethodsEnum, makeRequest } from "../../tools/request";
 
 export const SetPassword = () => {
@@ -37,9 +36,6 @@ export const SetPassword = () => {
 
   return (
     <div className="signup-page" style={{ background: selectedTheme }}>
-      <Link to="/check-email" className="arrow-main">
-        <IoIosArrowBack />
-      </Link>
       <div className="container">
         <div className="login-container">
           <div className="form-error form-error-top">{showError}</div>
@@ -55,16 +51,22 @@ export const SetPassword = () => {
               initialValues={{ username: "", password: "" }}
               onSubmit={handleSetPassword}
             >
-              <Form>
-                <FormField
-                  type="text"
-                  name="usernamecode"
-                  placeholder="Email"
-                  value={email}
-                />
-                <FormField type="text" name="password" placeholder="Password" />
-                <FormSubmit buttonText="Register" />
-              </Form>
+              {({ isSubmitting }) => (
+                <Form>
+                  <FormField
+                    type="email"
+                    name="usernamecode"
+                    placeholder="Email"
+                    value={email}
+                  />
+                  <FormField
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                  />
+                  <FormSubmit buttonText="Register" isSubmitting={isSubmitting} />
+                </Form>
+              )}
             </Formik>
           </div>
           <div className="circle circle-two"></div>

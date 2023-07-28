@@ -2,7 +2,6 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useState } from "react";
-import { IoIosArrowBack } from "react-icons/io";
 import { ThemeButtons } from "../helpers/ThemeButtons";
 import { FormField } from "../helpers/FormField";
 import { FormSubmit } from "../helpers/FormSubmit";
@@ -48,9 +47,6 @@ export const CheckConfirmCode: React.FC = () => {
 
   return (
     <div className="signup-page" style={{ background: selectedTheme }}>
-      <Link to="/" className="arrow-main">
-        <IoIosArrowBack />
-      </Link>
       <div className="container">
         <div className="login-container">
           <div className="circle circle-one"></div>
@@ -67,16 +63,19 @@ export const CheckConfirmCode: React.FC = () => {
               validationSchema={validationSchema}
               onSubmit={checkConfirmationCode}
             >
-              <Form>
-                <FormField
-                  name="usernamecode"
-                  placeholder="Email"
-                  readOnly
-                  value={email}
-                />
-                <FormField name="code" placeholder="Code" />
-                <FormSubmit buttonText="Next" />
-              </Form>
+              {({ isSubmitting }) => (
+                <Form>
+                  <FormField
+                    type="email"
+                    name="usernamecode"
+                    placeholder="Email"
+                    readOnly
+                    value={email}
+                  />
+                  <FormField name="code" placeholder="Code" />
+                  <FormSubmit buttonText="Next" isSubmitting={isSubmitting} />
+                </Form>
+              )}
             </Formik>
           </div>
           <div className="circle circle-two"></div>

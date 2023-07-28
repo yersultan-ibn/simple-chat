@@ -63,15 +63,17 @@ export const CheckEmail = () => {
               validationSchema={validationSchema}
               onSubmit={checkEmailAvailability}
             >
-              <Form>
-                <FormField
-                  type="text"
-                  name="username"
-                  placeholder="Email"
-                  value={emailState}
-                />
-                <FormSubmit buttonText="Next" />
-              </Form>
+              {({ isSubmitting }) => (
+                <Form>
+                  <FormField
+                    type="email"
+                    name="username"
+                    placeholder="Email"
+                    value={emailState}
+                  />
+                  <FormSubmit buttonText="Next" isSubmitting={isSubmitting} />
+                </Form>
+              )}
             </Formik>
             <div className="have-account">
               <p>Have an account? </p>
