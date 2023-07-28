@@ -1,14 +1,12 @@
 // SetPassword.js
-import { Formik, Field, Form, ErrorMessage } from "formik";
-import * as Yup from "yup";
-import { useNavigate, useLocation, Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { Formik, Form } from "formik";
+import { useNavigate, Link } from "react-router-dom";
+import { useState } from "react";
 import { ThemeButtons } from "../helpers/ThemeButtons";
 import { FormField } from "../helpers/FormField";
 import { FormSubmit } from "../helpers/FormSubmit";
 import { IoIosArrowBack } from "react-icons/io";
 import { RequestMethodsEnum, makeRequest } from "../../tools/request";
-import Cookies from "js-cookie";
 
 type SignInValues = {
   username: string;
@@ -16,8 +14,7 @@ type SignInValues = {
 };
 
 export const SignIn: React.FC = () => {
-  const location = useLocation();
-  const [emailState, setEmailState] = useState("");
+  const [emailState] = useState("");
   const navigate = useNavigate();
   const [showError, setShowError] = useState("");
   const [selectedTheme, setSelectedTheme] = useState("");

@@ -1,12 +1,10 @@
-import React, { FC } from "react";
-
 import "./style.scss";
 
 interface LoaderProps {
   text: string;
 }
 
-export const Loader: FC<LoaderProps> = ({ text }) => {
+export const Loader: React.FC<LoaderProps> = ({ text }) => {
   return (
     <div className="spinner">
       <div className="loadingio-spinner-ellipsis-57ekl48z0o3">

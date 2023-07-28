@@ -1,4 +1,4 @@
-import { Formik, Field, Form, ErrorMessage } from "formik";
+import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -20,13 +20,13 @@ const validationSchema = Yup.object().shape({
 
 export const CheckEmail = () => {
   const navigate = useNavigate();
-  const [emailState, setEmailState] = useState("");
+  const [emailState] = useState("");
   const [selectedTheme, setSelectedTheme] = useState("");
   const [showError, setShowError] = useState("");
 
   const checkEmailAvailability = async (values: CheckEmailValues) => {
     try {
-      const data = await makeRequest({
+      await makeRequest({
         url: "auth/sign-up/check-email",
         body: JSON.stringify({ email: values.username }),
         method: RequestMethodsEnum.POST,

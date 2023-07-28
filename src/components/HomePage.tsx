@@ -1,16 +1,9 @@
-import {
-  BrowserRouter,
-  Navigate,
-  Route,
-  Router,
-  Routes,
-} from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { CheckEmail } from "./SignUp/CheckEmail";
 import { CheckConfirmCode } from "./SignUp/CheckConfirmCode";
 import { SetPassword } from "./SignUp/SetPassword";
 import { SignIn } from "./SignIn/SignIn";
-import { TransitionGroup, CSSTransition } from "react-transition-group";
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Dashboard } from "./Dashboard/Dashboard";
 import { PrivateRoute } from "./PrivateRoute/PrivateRoute";
 import { Loader } from "./index";

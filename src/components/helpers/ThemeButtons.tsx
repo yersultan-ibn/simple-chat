@@ -1,6 +1,5 @@
-import { type } from "os";
 import { themes } from "../../constants";
- type Theme = {
+type Theme = {
   background: string;
 };
 
@@ -10,7 +9,7 @@ export type ThemeButtonsProps = {
 
 export const ThemeButtons: React.FC<ThemeButtonsProps> = ({
   handleThemeChange,
-}: any) => {
+}) => {
   return (
     <div className="theme-btn-container">
       {themes.map((theme: Theme) => {

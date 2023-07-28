@@ -24,7 +24,7 @@ export const CheckConfirmCode: React.FC = () => {
 
   const checkConfirmationCode = async (values: { code: string }) => {
     try {
-      const data = await makeRequest({
+      await makeRequest({
         url: "auth/sign-up/check-confirm-code",
         body: JSON.stringify({ email, code: values.code }),
         method: RequestMethodsEnum.POST,

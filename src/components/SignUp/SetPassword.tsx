@@ -1,6 +1,5 @@
 // SetPassword.js
-import { Formik, Field, Form, ErrorMessage } from "formik";
-import * as Yup from "yup";
+import { Formik, Form } from "formik";
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useState } from "react";
 import { ThemeButtons } from "../helpers/ThemeButtons";
@@ -19,12 +18,11 @@ export const SetPassword = () => {
 
   const handleSetPassword = async (values: any) => {
     try {
-      const data = await makeRequest({
+      await makeRequest({
         url: "auth/sign-up/set-password",
         body: JSON.stringify({ email, password: values.password }),
         method: RequestMethodsEnum.POST,
       });
-
 
       navigate(`/sign-in`);
     } catch (error: any) {
