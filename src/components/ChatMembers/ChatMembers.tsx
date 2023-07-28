@@ -1,13 +1,21 @@
 import { useEffect, useState } from "react";
 import { members } from "../../constants";
-import { useUserContext } from "../../context/UserContext";
-export const ChatMembers: React.FC = () => {
+import { User } from "../../types";
+
+type ChatMembersProps = {
+  selectedUser: User | null;
+  onUserSelect: (user: User) => void;
+};
+
+export const ChatMembers: React.FC<ChatMembersProps> = ({
+  onUserSelect,
+  selectedUser,
+}) => {
   const [darkMode, setDarkMode] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const { selectedUser, setSelectedUser } = useUserContext();
 
-  const handleUserSelection = (user: any) => {
-    setSelectedUser(user);
+  const handleUserSelection = (user: User) => {
+    onUserSelect(user);
   };
 
   const toggleDarkMode = () => {
@@ -26,7 +34,7 @@ export const ChatMembers: React.FC = () => {
     toggleDarkMode();
   };
 
-  const filteredMembers = members.filter((user) =>
+  const filteredMembers = members.filter((user: User) =>
     user.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 

@@ -1,8 +1,9 @@
-// FormSubmit.js
+interface FormSubmitProps {
+  buttonText: string;
+}
 
-export const FormSubmit = ({ buttonText }:any) => (
+export const FormSubmit: React.FC<FormSubmitProps> = ({ buttonText }) => (
   <button type="submit" className="opacity">
     {buttonText}
   </button>
 );
- 

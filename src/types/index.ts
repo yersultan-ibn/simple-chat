@@ -22,10 +22,7 @@ export interface NewMessage {
   date: string;
 }
 
-export interface UserContextType {
-  selectedUser: User | null;
-  setSelectedUser: React.Dispatch<React.SetStateAction<User | null>>;
-}
+
 
 export interface FormFieldProps extends FieldAttributes<any> {
   name: string;

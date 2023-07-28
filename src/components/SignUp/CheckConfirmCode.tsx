@@ -22,15 +22,13 @@ export const CheckConfirmCode: React.FC = () => {
   const [showError, setShowError] = useState<string>("");
   const [selectedTheme, setSelectedTheme] = useState<string>("#231f20");
 
-  const checkConfirmationCode = async (values: any) => {
+  const checkConfirmationCode = async (values: { code: string }) => {
     try {
       const data = await makeRequest({
         url: "auth/sign-up/check-confirm-code",
         body: JSON.stringify({ email, code: values.code }),
         method: RequestMethodsEnum.POST,
       });
-
-      console.log(data);
 
       navigate(`/set-password?email=${email}`);
     } catch (error: any) {
@@ -44,7 +42,7 @@ export const CheckConfirmCode: React.FC = () => {
     }
   };
 
-  const handleThemeChange = (theme: any) => {
+  const handleThemeChange = (theme: string) => {
     setSelectedTheme(theme);
   };
 
@@ -88,5 +86,3 @@ export const CheckConfirmCode: React.FC = () => {
     </div>
   );
 };
-
-export default CheckConfirmCode;

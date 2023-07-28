@@ -15,7 +15,7 @@ import { Dashboard } from "./Dashboard/Dashboard";
 import { PrivateRoute } from "./PrivateRoute/PrivateRoute";
 import { Loader } from "./index";
 
-export const HomePage = () => {
+export const HomePage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {

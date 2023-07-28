@@ -1,17 +1,21 @@
-import { useUserContext } from "../../context/UserContext";
+import { User } from "../../types";
 
-export const UserProfile = () => {
-  const { selectedUser } = useUserContext();
+type UserProfileProps = {
+  user: User;
+  onClose: () => void;
+};
 
-  if (!selectedUser) {
+export const UserProfile: React.FC<UserProfileProps> = ({ onClose, user }) => {
+  const { name, phone, country, status, socialMedia, activities, img } = user;
+
+  if (!user) {
     return null;
   }
 
-  console.log(selectedUser);
   return (
     <div className="user-profile">
-      <div className="user-profile__close d-flex d-xl-none">
-        {/* <svg
+      <div className="user-profile__close d-flex d-xl-none" onClick={onClose}>
+        <svg
           xmlns="http://www.w3.org/2000/svg"
           className="svg-icon"
           viewBox="0 0 38.8 38.9"
@@ -26,24 +30,24 @@ export const UserProfile = () => {
               fill="#d87232"
             />
           </g>
-        </svg> */}
+        </svg>
       </div>
       <div className="user-profile__wrapper">
         <div className="user-profile__avatar">
-          <img src={selectedUser.img} alt={selectedUser.name} />
+          <img src={img} alt={name} />
         </div>
         <div className="user-profile__details mt-1">
-          <span className="user-profile__name">{selectedUser.name}</span>
-          <span className="user-profile__phone">{selectedUser.phone}</span>
-          <span className="user-profile__location">{selectedUser.country}</span>
+          <span className="user-profile__name">{name}</span>
+          <span className="user-profile__phone">{phone}</span>
+          <span className="user-profile__location">{country}</span>
         </div>
         <div className="user-profile__description">
-          <p>{selectedUser.status}</p>
+          <p>{status}</p>
         </div>
         <div className="user-profile__learning mt-4">
           <span className="user-profile__label">Social Medias</span>
           <ul className="user-profile__tags user-profile__tags--primary mt-2">
-            {selectedUser.socialMedia.map((item, i) => (
+            {socialMedia.map((item, i) => (
               <li key={i}>
                 <a href={item.link} target="_blank">
                   {item.name}
@@ -55,7 +59,7 @@ export const UserProfile = () => {
         <div className="user-profile__hobbies">
           <span className="user-profile__label">Activities</span>
           <ul className="user-profile__tags user-profile__tags--secondary mt-2">
-            {selectedUser.activities.map((item, i) => (
+            {activities.map((item, i) => (
               <li key={i}>{item}</li>
             ))}
           </ul>

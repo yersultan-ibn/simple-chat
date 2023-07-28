@@ -10,27 +10,19 @@ import { IoIosArrowBack } from "react-icons/io";
 import { RequestMethodsEnum, makeRequest } from "../../tools/request";
 import Cookies from "js-cookie";
 
-const validationSchema = Yup.object().shape({
-  // username: Yup.string()
-  //   .email("Invalid email format")
-  //   .min(3, "Email address must have at least 3 characters")
-  //   .required("Email is required"),
-  // password: Yup.string()
-  //   .min(6, "Password must have at least 8 characters")
-  //   .required("Password is required"),
-  // confirmPassword: Yup.string()
-  //   .oneOf([Yup.ref("password"), undefined], "Passwords must match")
-  //   .required("Confirm Password is required"),
-});
+type SignInValues = {
+  username: string;
+  password: string;
+};
 
-export const SignIn = () => {
+export const SignIn: React.FC = () => {
   const location = useLocation();
   const [emailState, setEmailState] = useState("");
   const navigate = useNavigate();
   const [showError, setShowError] = useState("");
   const [selectedTheme, setSelectedTheme] = useState("");
 
-  const handleSignIn = async (values: any) => {
+  const handleSignIn = async (values: SignInValues) => {
     try {
       const data = await makeRequest({
         url: "auth/sign-in",
@@ -43,7 +35,6 @@ export const SignIn = () => {
 
       localStorage.setItem("token", data.token);
       localStorage.setItem("email", values.username);
-      console.log(values.username);
       navigate(`/`);
     } catch (error: any) {
       setShowError("User not registered");
@@ -51,7 +42,7 @@ export const SignIn = () => {
     }
   };
 
-  const handleThemeChange = (theme: any) => {
+  const handleThemeChange = (theme: string) => {
     setSelectedTheme(theme);
   };
 
@@ -73,7 +64,6 @@ export const SignIn = () => {
             <h1 className="opacity form-title">Sign in</h1>
             <Formik
               initialValues={{ username: "", password: "" }}
-              validationSchema={validationSchema}
               onSubmit={handleSignIn}
             >
               <Form>

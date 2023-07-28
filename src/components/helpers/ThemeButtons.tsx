@@ -1,11 +1,10 @@
+import { type } from "os";
 import { themes } from "../../constants";
-// Define the type for the theme object
-type Theme = {
+ type Theme = {
   background: string;
-  // Add more properties if needed
 };
 
-type ThemeButtonsProps = {
+export type ThemeButtonsProps = {
   handleThemeChange: (background: string) => void;
 };
 

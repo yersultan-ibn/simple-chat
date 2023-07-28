@@ -9,19 +9,6 @@ import { FormSubmit } from "../helpers/FormSubmit";
 import { IoIosArrowBack } from "react-icons/io";
 import { RequestMethodsEnum, makeRequest } from "../../tools/request";
 
-const validationSchema = Yup.object().shape({
-  // username: Yup.string()
-  //   .email("Invalid email format")
-  //   .min(3, "Email address must have at least 3 characters")
-  //   .required("Email is required"),
-  // password: Yup.string()
-  //   .min(6, "Password must have at least 8 characters")
-  //   .required("Password is required"),
-  // confirmPassword: Yup.string()
-  //   .oneOf([Yup.ref("password"), undefined], "Passwords must match")
-  //   .required("Confirm Password is required"),
-});
-
 export const SetPassword = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
@@ -38,7 +25,6 @@ export const SetPassword = () => {
         method: RequestMethodsEnum.POST,
       });
 
-      console.log(data);
 
       navigate(`/sign-in`);
     } catch (error: any) {
@@ -69,7 +55,6 @@ export const SetPassword = () => {
             <h1 className="opacity form-title">Sign up</h1>
             <Formik
               initialValues={{ username: "", password: "" }}
-              validationSchema={validationSchema}
               onSubmit={handleSetPassword}
             >
               <Form>

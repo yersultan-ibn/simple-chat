@@ -139,6 +139,9 @@ body {
 /* ===================================
     Main
 ====================================== */
+.d-xl-none {
+  display: block !important;
+}
 .messages-page {
   height: 100vh;
 

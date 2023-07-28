@@ -7,6 +7,10 @@ import { FormField } from "../helpers/FormField";
 import { FormSubmit } from "../helpers/FormSubmit";
 import { RequestMethodsEnum, makeRequest } from "../../tools/request";
 
+type CheckEmailValues = {
+  username: string;
+};
+
 const validationSchema = Yup.object().shape({
   username: Yup.string()
     .email("Invalid email format")
@@ -20,7 +24,7 @@ export const CheckEmail = () => {
   const [selectedTheme, setSelectedTheme] = useState("");
   const [showError, setShowError] = useState("");
 
-  const checkEmailAvailability = async (values: any) => {
+  const checkEmailAvailability = async (values: CheckEmailValues) => {
     try {
       const data = await makeRequest({
         url: "auth/sign-up/check-email",
@@ -28,10 +32,8 @@ export const CheckEmail = () => {
         method: RequestMethodsEnum.POST,
       });
 
-      console.log(data);
       navigate("/check-confirm-code?email=" + values.username);
     } catch (error: any) {
-      console.log(error);
       setShowError(
         "We have already sent a confirmation code. Please check your email."
       );
@@ -39,7 +41,7 @@ export const CheckEmail = () => {
     }
   };
 
-  const handleThemeChange = (theme: any) => {
+  const handleThemeChange = (theme: string) => {
     setSelectedTheme(theme);
   };
 

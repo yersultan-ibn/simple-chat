@@ -37,7 +37,6 @@ export const Chat: React.FC = () => {
   };
 
   const handleSocketMessage = (event: MessageEvent) => {
-    console.log(event);
     const data = JSON.parse(event.data);
     console.log("Получено сообщение от сервера:", data);
     const conversionData = formatDate(data.date);
@@ -99,7 +98,7 @@ export const Chat: React.FC = () => {
   const handleSendData = () => {
     if (!socket) return;
     if (inputValue.trim() === "") return;
-    console.log(inputValue);
+    // console.log(inputValue);
     socket.send(inputValue);
     setSentMessages(inputValue);
   };
