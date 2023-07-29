@@ -3,6 +3,7 @@ import { wsUrl } from "../../constants";
 import { useNavigate } from "react-router-dom";
 import { WebSocketResponse } from "../../types";
 import "./Chat.scss";
+import { FormSubmit } from "../helpers/FormSubmit";
 
 export const Chat: React.FC = () => {
   const socketRef = useRef<WebSocket>();
@@ -13,6 +14,11 @@ export const Chat: React.FC = () => {
   const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
   const [socket, setSocket] = useState<WebSocket>();
   const [userEmail, setUserEmail] = useState("");
+
+  const handleSignOut = () => {
+    localStorage.removeItem("token");
+    navigate("/sign-in");
+  };
 
   const initializeWebSocket = () => {
     const token = localStorage.getItem("token");
@@ -28,7 +34,7 @@ export const Chat: React.FC = () => {
       const timePart = dateString.split("T")[1].slice(0, 5);
       return `${datePart} ${timePart}`;
     } else {
-      // navigate("/sign-in");
+      handleSignOut();
     }
   };
 
@@ -57,8 +63,7 @@ export const Chat: React.FC = () => {
     }
 
     if (data.errorMessage) {
-      localStorage.removeItem("token");
-      // navigate("/sign-in");
+      handleSignOut();
     }
   };
 
@@ -172,6 +177,25 @@ export const Chat: React.FC = () => {
               <div className="chat-member__wrapper" data-online="true">
                 <div className="chat-member__details">
                   <span className="chat-member__name">General</span>
+                  <a
+                    href="https://www.youtube.com/watch?v=aN9daWCDwDU"
+                    className="chat-member__link"
+                  >
+                    <img
+                      src="https://ebaconline.com.br/images/tild6263-6434-4266-a661-653436663264__002-coding-1-2.svg"
+                      alt="Logo"
+                      className="chat-member__logo"
+                    />
+                    <p>
+                      Simple <br />
+                      Chat
+                    </p>
+                  </a>
+                  <FormSubmit
+                    buttonText="Sign out"
+                    buttonStyles="chat-member__signout"
+                    onClick={handleSignOut}
+                  />
                 </div>
               </div>
             </div>

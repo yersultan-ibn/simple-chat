@@ -605,18 +605,43 @@ body {
       word-break: break-all;
       text-overflow: ellipsis;
       overflow: hidden;
+      margin: 0px;
       @include p-rfs;
     }
+
     &__details {
       margin-left: 0.8rem;
       display: flex;
-      justify-content: center;
-      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
 
       @include media(small) {
         margin-left: 1rem;
       }
     }
+    &__link {
+      display: flex;
+      p{
+        margin: 0px;
+      }
+    }
+    &__logo {
+      height: 50px;
+      margin-right: 10px;
+    }
+    &__signout {
+      border: none;
+      background: transparent;
+      max-width: 150px;
+      color: #fff;
+      padding: 10px 0px;
+      border-radius: 13px;
+      font-size: 16px;
+      margin-right: 13px;
+      background-color: var(--colour-primary);
+    }
+
     &__age {
       @include small-text-rfs;
       color: var(--colour-text-lighter);

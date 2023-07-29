@@ -2,11 +2,22 @@ import React from "react";
 
 interface FormSubmitProps {
   buttonText: string;
-  isSubmitting: boolean; // Add the isSubmitting prop
+  isSubmitting?: boolean; // Add the isSubmitting prop
+  buttonStyles?: string;
+  onClick? : () => void
 }
 
-export const FormSubmit: React.FC<FormSubmitProps> = ({ buttonText, isSubmitting }) => (
-  <button type="submit" className={`btn-block ${isSubmitting ? "sending" : ""}`}>
+export const FormSubmit: React.FC<FormSubmitProps> = ({
+  buttonText,
+  isSubmitting,
+  buttonStyles,
+  onClick
+}) => (
+  <button
+    type="submit"
+    className={`${buttonStyles} btn-block ${isSubmitting ? "sending" : ""}`}
+    onClick={onClick}
+  >
     {buttonText}
   </button>
 );

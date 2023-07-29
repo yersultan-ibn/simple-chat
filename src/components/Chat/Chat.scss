@@ -1,27 +1,27 @@
 .chat_info_alert {
-    margin: 25px 0 !important
+  margin: 25px 0 !important;
 }
 
 .chat_message_container {
-    &.me {
-        align-self: end;
+  &.me {
+    align-self: end;
 
-        .message_time {
-            font-size: 10px;
-            text-align: end;
-        }
+    .message_time {
+      font-size: 10px;
+      text-align: end;
     }
+  }
 
-    &.you {
-        align-self: start;
+  &.you {
+    align-self: start;
 
-        .message_time {
-            font-size: 10px;
-            text-align: start;
-        }
+    .message_time {
+      font-size: 10px;
+      text-align: start;
     }
+  }
 }
 
 .message_time {
-    font-size: 10px;
+  font-size: 10px;
 }
