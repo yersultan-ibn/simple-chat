@@ -101,7 +101,7 @@ export const Chat: React.FC = () => {
                 <>
                   <li key={index} className="chat_info_alert">
                     <div className="chat__time">
-                      {messageData.email} joined at{" "}
+                      {messageData.email} joined at
                       {formatDate(messageData.date)}
                     </div>
                   </li>
