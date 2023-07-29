@@ -77,6 +77,7 @@ export const Chat: React.FC = () => {
       console.log("WebSocket соединение закрыто успешно.");
     } else {
       console.error("Ошибка WebSocket соединения:", event.reason);
+      alert("Token has expired. Please sign in again.");
     }
   };
 
