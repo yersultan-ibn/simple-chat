@@ -33,9 +33,7 @@ export const Chat: React.FC = () => {
       const datePart = dateString.split("T")[0];
       const timePart = dateString.split("T")[1].slice(0, 5);
       return `${datePart} ${timePart}`;
-    } else {
-      handleSignOut();
-    }
+    } 
   };
 
   const handleSocketMessage = (event: any) => {
