@@ -15,14 +15,14 @@ export interface User {
   activities: string[];
   status: string;
 }
-
-export interface Message {
-  email: string;
-  message: string;
+export interface WebSocketResponse {
+  content: string | string[];
   date: string;
+  email: string;
+  id: string;
+  type: "message" | "onlineUsers" | "connection";
+  errorMessage?: string;
 }
-
-
 
 export interface FormFieldProps extends FieldAttributes<any> {
   name: string;

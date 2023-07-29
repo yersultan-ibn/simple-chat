@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { wsUrl } from "../../constants";
 import { useNavigate } from "react-router-dom";
-import { Message } from "../../types";
+import { WebSocketResponse } from "../../types";
 import "./Chat.scss";
 
 export const Chat: React.FC = () => {
@@ -9,7 +9,8 @@ export const Chat: React.FC = () => {
   const navigate = useNavigate();
 
   const [inputValue, setInputValue] = useState<string>("");
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<WebSocketResponse[]>([]);
+  const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
   const [socket, setSocket] = useState<WebSocket>();
   const [userEmail, setUserEmail] = useState("");
 
@@ -27,25 +28,37 @@ export const Chat: React.FC = () => {
       const timePart = dateString.split("T")[1].slice(0, 5);
       return `${datePart} ${timePart}`;
     } else {
-      navigate("/sign-in");
+      // navigate("/sign-in");
     }
   };
 
-  const handleSocketMessage = (event: MessageEvent) => {
-    const data = JSON.parse(event.data);
+  const handleSocketMessage = (event: any) => {
+    const data: WebSocketResponse = JSON.parse(event.data);
     const conversionData = formatDate(data.date);
+    console.log(data);
 
-    if (data.message) {
+    if (data.type === "message") {
       setMessages((prevState) => [
         ...prevState,
-        { email: data.email, message: data.message, date: conversionData },
+        {
+          id: data.id,
+          content: Array.isArray(data.content)
+            ? data.content.join(" ")
+            : data.content,
+          email: data.email,
+          date: data.date,
+          type: "message",
+        },
       ]);
-      setInputValue("");
+    } else if (data.type === "onlineUsers") {
+      setOnlineUsers(
+        Array.isArray(data.content) ? data.content : [data.content]
+      );
     }
 
     if (data.errorMessage) {
       localStorage.removeItem("token");
-      navigate("/sign-in");
+      // navigate("/sign-in");
     }
   };
 
@@ -70,6 +83,7 @@ export const Chat: React.FC = () => {
     if (!socket) return;
     if (inputValue.trim() === "") return;
     socket.send(inputValue);
+    setInputValue("");
   };
 
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -77,18 +91,18 @@ export const Chat: React.FC = () => {
       handleSendData();
     }
   };
-
   const renderMessages = () => {
     return (
       <div className="chat__content pt-4 px-3">
         <ul className="chat__list-messages">
           {messages &&
-            messages.map((messageData: Message, index: number) =>
-              messageData.message === "Connected" ? (
+            messages.map((messageData: any, index: number) =>
+              messageData.type === "onlineUsers" ? (
                 <>
                   <li key={index} className="chat_info_alert">
                     <div className="chat__time">
-                      {messageData.email} joined at {messageData.date}
+                      {messageData.email} joined at{" "}
+                      {formatDate(messageData.date)}
                     </div>
                   </li>
                 </>
