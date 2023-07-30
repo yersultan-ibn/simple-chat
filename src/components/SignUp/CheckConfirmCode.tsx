@@ -36,6 +36,9 @@ export const CheckConfirmCode: React.FC = () => {
       const textError = `${errorMessage} ${
         leftTriesCount !== undefined ? leftTriesCount : ""
       }`;
+      alert(
+        "Time for confirmation is up or you tried all tries. Please, start from the beginning."
+      );
       setShowError(textError);
       console.error("Ошибка при проверке доступности электронной почты", error);
     }
@@ -76,8 +79,7 @@ export const CheckConfirmCode: React.FC = () => {
                   <FormSubmit buttonText="Next" isSubmitting={isSubmitting} />
                 </Form>
               )}
-              </Formik>
-              
+            </Formik>
           </div>
           <div className="circle circle-two"></div>
         </div>

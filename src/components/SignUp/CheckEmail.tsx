@@ -33,8 +33,9 @@ export const CheckEmail = () => {
       });
 
       navigate(`/check-confirm-code?email=${values.username}`);
-      console.log('data',data);
+      console.log("data", data);
     } catch (error: any) {
+      setEmailState(values.username)
       setShowError(
         "We have already sent a confirmation code. Please check your email."
       );
@@ -78,14 +79,28 @@ export const CheckEmail = () => {
               )}
             </Formik>
             <div className="have-account">
-              <p>Have an account? </p>
-              <Link
-                to={`/sign-in`}
-                className="enter-code"
-                style={{ color: "#39ff00" }}
-              >
-                Log in
-              </Link>
+              {showError ? (
+                <>
+                  <Link
+                    to={`/check-confirm-code?email=${emailState}`}
+                    className="enter-code"
+                    style={{ color: "#39ff00" }}
+                  >
+                    Enter a code
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <p>Have an account? </p>
+                  <Link
+                    to={`/sign-in`}
+                    className="enter-code"
+                    style={{ color: "#39ff00" }}
+                  >
+                    Log in
+                  </Link>
+                </>
+              )}
             </div>
           </div>
           <div className="circle circle-two"></div>
