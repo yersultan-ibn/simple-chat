@@ -622,13 +622,19 @@ body {
     }
     &__link {
       display: flex;
-      p{
+      p {
         margin: 0px;
+        @include media(small) {
+          font-size: 13px;
+        }
       }
     }
     &__logo {
       height: 50px;
       margin-right: 10px;
+      @include media(small) {
+        height: 40px;
+      }
     }
     &__signout {
       border: none;
@@ -640,6 +646,10 @@ body {
       font-size: 16px;
       margin-right: 13px;
       background-color: var(--colour-primary);
+      @include media(small) {
+        max-width: 110px;
+        font-size: 13px;
+      }
     }
 
     &__age {

@@ -27,5 +27,5 @@ export interface WebSocketResponse {
 export interface FormFieldProps extends FieldAttributes<any> {
   name: string;
   placeholder: string;
-  value?: string;
+  value?: string | null;
 }

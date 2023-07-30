@@ -20,19 +20,20 @@ const validationSchema = Yup.object().shape({
 
 export const CheckEmail = () => {
   const navigate = useNavigate();
-  const [emailState] = useState("");
+  const [emailState, setEmailState] = useState("");
   const [selectedTheme, setSelectedTheme] = useState("");
   const [showError, setShowError] = useState("");
 
   const checkEmailAvailability = async (values: CheckEmailValues) => {
     try {
-      await makeRequest({
+      const data = await makeRequest({
         url: "auth/sign-up/check-email",
         body: JSON.stringify({ email: values.username }),
         method: RequestMethodsEnum.POST,
       });
 
-      navigate("/check-confirm-code?email=" + values.username);
+      navigate(`/check-confirm-code?email=${values.username}`);
+      console.log('data',data);
     } catch (error: any) {
       setShowError(
         "We have already sent a confirmation code. Please check your email."

@@ -13,7 +13,7 @@ export const FormField: React.FC<FormFieldProps> = ({
         type={type}
         name={name}
         placeholder={placeholder}
-        // defaultValue={value}
+        defaultValue={value}
         readOnly
       />
     ) : (
@@ -21,6 +21,7 @@ export const FormField: React.FC<FormFieldProps> = ({
         type={type}
         name={name}
         placeholder={placeholder}
+        defaultValue={value}
       />
     )}
     <ErrorMessage name={name} component="p" className="form-error" />

@@ -16,14 +16,14 @@ const validationSchema = Yup.object().shape({
 export const CheckConfirmCode: React.FC = () => {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const email = searchParams.get("email") ?? undefined;
+  const email = searchParams.get("email");
   const navigate = useNavigate();
   const [showError, setShowError] = useState<string>("");
   const [selectedTheme, setSelectedTheme] = useState<string>("#231f20");
 
   const checkConfirmationCode = async (values: { code: string }) => {
     try {
-      await makeRequest({
+      const data = await makeRequest({
         url: "auth/sign-up/check-confirm-code",
         body: JSON.stringify({ email, code: values.code }),
         method: RequestMethodsEnum.POST,
@@ -76,7 +76,8 @@ export const CheckConfirmCode: React.FC = () => {
                   <FormSubmit buttonText="Next" isSubmitting={isSubmitting} />
                 </Form>
               )}
-            </Formik>
+              </Formik>
+              
           </div>
           <div className="circle circle-two"></div>
         </div>

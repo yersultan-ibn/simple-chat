@@ -15,7 +15,7 @@ type SignInValues = {
 };
 
 export const SignIn: React.FC = () => {
-  const [emailState] = useState("");
+  const [emailState, setEmailState] = useState("");
   const navigate = useNavigate();
   const [showError, setShowError] = useState("");
   const [selectedTheme, setSelectedTheme] = useState("");
