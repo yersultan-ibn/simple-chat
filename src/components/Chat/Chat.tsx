@@ -33,7 +33,7 @@ export const Chat: React.FC = () => {
       const datePart = dateString.split("T")[0];
       const timePart = dateString.split("T")[1].slice(0, 5);
       return `${datePart} ${timePart}`;
-    } 
+    }
   };
 
   const handleSocketMessage = (event: any) => {
@@ -117,10 +117,8 @@ export const Chat: React.FC = () => {
                     <div className="chat_message_container me">
                       <div className="chat__bubble chat__bubble--me">
                         <div className="message_time">{messageData.email}</div>
-
                         {messageData && messageData.message}
                       </div>
-
                       <div className="message_time">
                         {messageData && messageData.date}
                       </div>

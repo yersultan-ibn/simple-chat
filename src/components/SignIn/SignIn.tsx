@@ -7,6 +7,8 @@ import { FormField } from "../helpers/FormField";
 import { FormSubmit } from "../helpers/FormSubmit";
 import { RequestMethodsEnum, makeRequest } from "../../tools/request";
 import { FaSpinner } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa"; // Import eye icons
+
 type SignInValues = {
   username: string;
   password: string;
@@ -17,6 +19,7 @@ export const SignIn: React.FC = () => {
   const navigate = useNavigate();
   const [showError, setShowError] = useState("");
   const [selectedTheme, setSelectedTheme] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSignIn = async (values: SignInValues) => {
     try {
@@ -41,7 +44,9 @@ export const SignIn: React.FC = () => {
   const handleThemeChange = (theme: string) => {
     setSelectedTheme(theme);
   };
-
+  const toggleShowPassword = () => {
+    setShowPassword((prevShowPassword: any) => !prevShowPassword);
+  };
   return (
     <div className="signup-page" style={{ background: selectedTheme }}>
       <div className="container">
@@ -67,11 +72,18 @@ export const SignIn: React.FC = () => {
                     placeholder="Email"
                     value={emailState}
                   />
-                  <FormField
-                    type="text"
-                    name="password"
-                    placeholder="Password"
-                  />
+                  <div className="password-field">
+                    <FormField
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      placeholder="Password"
+                    />
+                    {showPassword ? (
+                      <FaEyeSlash onClick={toggleShowPassword} />
+                    ) : (
+                      <FaEye onClick={toggleShowPassword} />
+                    )}
+                  </div>
                   <FormSubmit buttonText="Log in" isSubmitting={isSubmitting} />
                 </Form>
               )}

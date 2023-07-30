@@ -4,14 +4,14 @@ interface FormSubmitProps {
   buttonText: string;
   isSubmitting?: boolean; // Add the isSubmitting prop
   buttonStyles?: string;
-  onClick? : () => void
+  onClick?: () => void;
 }
 
 export const FormSubmit: React.FC<FormSubmitProps> = ({
   buttonText,
   isSubmitting,
   buttonStyles,
-  onClick
+  onClick,
 }) => (
   <button
     type="submit"

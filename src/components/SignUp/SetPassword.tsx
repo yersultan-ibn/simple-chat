@@ -6,6 +6,7 @@ import { ThemeButtons } from "../helpers/ThemeButtons";
 import { FormField } from "../helpers/FormField";
 import { FormSubmit } from "../helpers/FormSubmit";
 import { RequestMethodsEnum, makeRequest } from "../../tools/request";
+import { FaEye, FaEyeSlash } from "react-icons/fa"; // Import eye icons
 
 export const SetPassword = () => {
   const location = useLocation();
@@ -14,6 +15,7 @@ export const SetPassword = () => {
   const navigate = useNavigate();
   const [showError, setShowError] = useState("");
   const [selectedTheme, setSelectedTheme] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSetPassword = async (values: any) => {
     try {
@@ -33,7 +35,9 @@ export const SetPassword = () => {
   const handleThemeChange = (theme: any) => {
     setSelectedTheme(theme);
   };
-
+  const toggleShowPassword = () => {
+    setShowPassword((prevShowPassword: any) => !prevShowPassword);
+  };
   return (
     <div className="signup-page" style={{ background: selectedTheme }}>
       <div className="container">
@@ -59,11 +63,18 @@ export const SetPassword = () => {
                     placeholder="Email"
                     value={email}
                   />
-                  <FormField
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                  />
+                  <div className="password-field">
+                    <FormField
+                      type={showPassword ? "text" : "password"}
+                      name="password"
+                      placeholder="Password"
+                    />
+                    {showPassword ? (
+                      <FaEyeSlash onClick={toggleShowPassword} />
+                    ) : (
+                      <FaEye onClick={toggleShowPassword} />
+                    )}
+                  </div>
                   <FormSubmit buttonText="Register" isSubmitting={isSubmitting} />
                 </Form>
               )}

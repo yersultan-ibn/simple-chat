@@ -37,6 +37,7 @@ export const CheckEmail = () => {
       setShowError(
         "We have already sent a confirmation code. Please check your email."
       );
+      alert("We have sent you the code to your email.");
       console.error("Ошибка при проверке доступности электронной почты", error);
     }
   };

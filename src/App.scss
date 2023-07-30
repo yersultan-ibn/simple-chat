@@ -573,3 +573,27 @@ h1 {
     transform: rotate(360deg);
   }
 }
+.password-field {
+  position: relative;
+
+  input {
+    padding-right: 2.5rem;
+  }
+
+  svg {
+    position: absolute;
+    top: 50%;
+    right: 0.75rem;
+    transform: translateY(-50%);
+    cursor: pointer;
+  }
+}
+
+.password-field svg {
+  font-size: 1.2rem;
+  color: #777;
+}
+
+.password-field svg:hover {
+  color: #000;
+}
