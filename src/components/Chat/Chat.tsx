@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { WebSocketResponse } from "../../types";
 import "./Chat.scss";
 import { FormSubmit } from "../helpers/FormSubmit";
+import Swal from "sweetalert2";
 
 export const Chat: React.FC = () => {
   const socketRef = useRef<WebSocket>();
@@ -59,9 +60,14 @@ export const Chat: React.FC = () => {
         Array.isArray(data.content) ? data.content : [data.content]
       );
     }
-
-    if (data.errorMessage) {
+    console.log("data.errorMessage", data.type);
+    if (data.type === "errorMessage") {
       handleSignOut();
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: `${data.content}`,
+      });
     }
   };
 
@@ -75,7 +81,6 @@ export const Chat: React.FC = () => {
       console.log("WebSocket соединение закрыто успешно.");
     } else {
       console.error("Ошибка WebSocket соединения:", event.reason);
-      alert("Token has expired. Please sign in again.");
     }
   };
 

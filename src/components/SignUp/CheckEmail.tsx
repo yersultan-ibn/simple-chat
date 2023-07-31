@@ -6,6 +6,7 @@ import { ThemeButtons } from "../helpers/ThemeButtons";
 import { FormField } from "../helpers/FormField";
 import { FormSubmit } from "../helpers/FormSubmit";
 import { RequestMethodsEnum, makeRequest } from "../../tools/request";
+import Swal from "sweetalert2";
 
 type CheckEmailValues = {
   username: string;
@@ -31,16 +32,19 @@ export const CheckEmail = () => {
         body: JSON.stringify({ email: values.username }),
         method: RequestMethodsEnum.POST,
       });
+      Swal.fire("Good job!", `${data.message}`, "success");
 
       navigate(`/check-confirm-code?email=${values.username}`);
-      console.log("data", data);
     } catch (error: any) {
-      setEmailState(values.username)
+      setEmailState(values.username);
       setShowError(
         "We have already sent a confirmation code. Please check your email."
       );
-      alert("We have sent you the code to your email.");
-      console.error("Ошибка при проверке доступности электронной почты", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: `${error.message}`,
+      });
     }
   };
 

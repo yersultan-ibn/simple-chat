@@ -7,6 +7,7 @@ import { FormField } from "../helpers/FormField";
 import { FormSubmit } from "../helpers/FormSubmit";
 import { RequestMethodsEnum, makeRequest } from "../../tools/request";
 import { FaEye, FaEyeSlash } from "react-icons/fa"; // Import eye icons
+import Swal from "sweetalert2";
 
 export const SetPassword = () => {
   const location = useLocation();
@@ -19,16 +20,22 @@ export const SetPassword = () => {
 
   const handleSetPassword = async (values: any) => {
     try {
-      await makeRequest({
+      const data = await makeRequest({
         url: "auth/sign-up/set-password",
         body: JSON.stringify({ email, password: values.password }),
         method: RequestMethodsEnum.POST,
       });
 
       navigate(`/sign-in`);
+      Swal.fire("Good job!", `${data.message}`, "success");
     } catch (error: any) {
       setShowError("No such user");
       console.error("Ошибка при проверке доступности электронной почты", error);
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: `${error.message}`,
+      });
     }
   };
 
@@ -75,10 +82,23 @@ export const SetPassword = () => {
                       <FaEye onClick={toggleShowPassword} />
                     )}
                   </div>
-                  <FormSubmit buttonText="Register" isSubmitting={isSubmitting} />
+                  <FormSubmit
+                    buttonText="Register"
+                    isSubmitting={isSubmitting}
+                  />
                 </Form>
               )}
             </Formik>
+            <div className="have-account">
+              <p>Have an account? </p>
+              <Link
+                to={`/sign-in`}
+                className="enter-code"
+                style={{ color: "#39ff00" }}
+              >
+                Log in
+              </Link>
+            </div>
           </div>
           <div className="circle circle-two"></div>
         </div>

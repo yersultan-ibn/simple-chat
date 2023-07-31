@@ -20,7 +20,7 @@ export interface WebSocketResponse {
   date: string;
   email: string;
   id: string;
-  type: "message" | "onlineUsers" | "connection";
+  type: "message" | "onlineUsers" | "connection"| 'errorMessage';
   errorMessage?: string;
 }
 

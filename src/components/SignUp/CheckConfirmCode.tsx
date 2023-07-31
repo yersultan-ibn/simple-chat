@@ -6,6 +6,7 @@ import { ThemeButtons } from "../helpers/ThemeButtons";
 import { FormField } from "../helpers/FormField";
 import { FormSubmit } from "../helpers/FormSubmit";
 import { RequestMethodsEnum, makeRequest } from "../../tools/request";
+import Swal from "sweetalert2";
 
 const validationSchema = Yup.object().shape({
   code: Yup.string()
@@ -28,7 +29,7 @@ export const CheckConfirmCode: React.FC = () => {
         body: JSON.stringify({ email, code: values.code }),
         method: RequestMethodsEnum.POST,
       });
-
+      Swal.fire("Good job!", `${data.message}`, "success");
       navigate(`/set-password?email=${email}`);
     } catch (error: any) {
       const errorMessage = error.message; // Use error.message directly
@@ -36,9 +37,13 @@ export const CheckConfirmCode: React.FC = () => {
       const textError = `${errorMessage} ${
         leftTriesCount !== undefined ? leftTriesCount : ""
       }`;
-      alert(
-        "Time for confirmation is up or you tried all tries. Please, start from the beginning."
-      );
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: `${errorMessage} ${
+          leftTriesCount !== undefined ? leftTriesCount : ""
+        }`,
+      });
       setShowError(textError);
       console.error("Ошибка при проверке доступности электронной почты", error);
     }

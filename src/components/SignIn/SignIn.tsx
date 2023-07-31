@@ -8,6 +8,7 @@ import { FormSubmit } from "../helpers/FormSubmit";
 import { RequestMethodsEnum, makeRequest } from "../../tools/request";
 import { FaSpinner } from "react-icons/fa";
 import { FaEye, FaEyeSlash } from "react-icons/fa"; // Import eye icons
+import Swal from "sweetalert2";
 
 type SignInValues = {
   username: string;
@@ -34,9 +35,15 @@ export const SignIn: React.FC = () => {
 
       localStorage.setItem("token", data.token);
       localStorage.setItem("email", values.username);
+      Swal.fire("Good job!", `Welcome ${values.username}`, "success");
       navigate(`/`);
     } catch (error: any) {
       setShowError("User not registered");
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: `${error.message}`,
+      });
       console.error("Ошибка при проверке доступности электронной почты", error);
     }
   };
