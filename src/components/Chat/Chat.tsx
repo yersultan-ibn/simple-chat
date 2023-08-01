@@ -178,21 +178,12 @@ export const Chat: React.FC = () => {
             <div className="chat__infos pl-2 pl-md-0">
               <div className="chat-member__wrapper" data-online="true">
                 <div className="chat-member__details">
-                  <span className="chat-member__name">General</span>
-                  <a
-                    href="https://www.youtube.com/watch?v=aN9daWCDwDU"
-                    className="chat-member__link"
-                  >
-                    <img
-                      src="https://ebaconline.com.br/images/tild6263-6434-4266-a661-653436663264__002-coding-1-2.svg"
-                      alt="Logo"
-                      className="chat-member__logo"
-                    />
-                    <p>
-                      Simple <br />
-                      Chat
+                  <span className="chat-member__name">Simple 
+                      Chat</span>
+                    <p className="title">
+                    
+                      General
                     </p>
-                  </a>
                   <FormSubmit
                     buttonText="Sign out"
                     buttonStyles="chat-member__signout"
