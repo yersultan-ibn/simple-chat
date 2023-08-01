@@ -1,5 +1,5 @@
 .chat_info_alert {
-  margin: 25px 0 !important;
+  margin: 25px auto;
 }
 
 .chat_message_container {
@@ -21,7 +21,11 @@
     }
   }
 }
-
+.chat__time {
+  &.center {
+    text-align: center;
+  }
+}
 .message_time {
   font-size: 10px;
 }

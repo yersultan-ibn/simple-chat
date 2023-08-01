@@ -5,82 +5,40 @@ import { WebSocketResponse } from "../../types";
 import "./Chat.scss";
 import { FormSubmit } from "../helpers/FormSubmit";
 import Swal from "sweetalert2";
+import Cookies from "js-cookie";
+import { useWebSocket } from "../hooks/useWebSocket";
+import { useMessageFetching } from "../hooks/useMessageFetching";
 
 export const Chat: React.FC = () => {
-  const socketRef = useRef<WebSocket>();
   const navigate = useNavigate();
-
   const [inputValue, setInputValue] = useState<string>("");
-  const [messages, setMessages] = useState<WebSocketResponse[]>([]);
-  const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
-  const [socket, setSocket] = useState<WebSocket>();
-  const [userEmail, setUserEmail] = useState("");
+  const chatContainerRef = useRef<HTMLDivElement>(null);
 
-  const handleSignOut = () => {
-    localStorage.removeItem("token");
-    navigate("/sign-in");
-  };
-
-  const initializeWebSocket = () => {
-    const token = localStorage.getItem("token");
-    const socket = new WebSocket(`${wsUrl}/ws?token=${token}`);
-
-    socketRef.current = socket;
-    setSocket(socket);
-  };
+  const {
+    socket,
+    socketRef,
+    onlineUsers,
+    messages,
+    initializeWebSocket,
+    handleSocketMessage,
+    handleSignOut,
+  } = useWebSocket();
+  
+  const {
+    apiMessages,
+    showLoadMorePrompt,
+    olderMessagesLoaded,
+    userEmail,
+    setIsScrollingToTop,
+    handleLoadMoreMessages,
+    setOlderMessagesLoaded,
+  } = useMessageFetching(messages, socketRef, initializeWebSocket);
 
   const formatDate = (dateString: string): any => {
     if (dateString) {
       const datePart = dateString.split("T")[0];
       const timePart = dateString.split("T")[1].slice(0, 5);
       return `${datePart} ${timePart}`;
-    }
-  };
-
-  const handleSocketMessage = (event: any) => {
-    const data: WebSocketResponse = JSON.parse(event.data);
-    const conversionData = formatDate(data.date);
-    console.log(data);
-
-    if (data.type === "message") {
-      setMessages((prevState) => [
-        ...prevState,
-        {
-          id: data.id,
-          content: Array.isArray(data.content)
-            ? data.content.join(" ")
-            : data.content,
-          email: data.email,
-          date: data.date,
-          type: "message",
-        },
-      ]);
-    } else if (data.type === "onlineUsers") {
-      setOnlineUsers(
-        Array.isArray(data.content) ? data.content : [data.content]
-      );
-    }
-    console.log("data.errorMessage", data.type);
-    if (data.type === "errorMessage") {
-      handleSignOut();
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: `${data.content}`,
-      });
-    }
-  };
-
-  const handleSocketError = (error: Event) => {
-    console.error("Ошибка WebSocket соединения:", error);
-  };
-
-  const handleSocketClose = (event: CloseEvent) => {
-    console.log("WebSocket соединение закрыто.");
-    if (event.code === 1000) {
-      console.log("WebSocket соединение закрыто успешно.");
-    } else {
-      console.error("Ошибка WebSocket соединения:", event.reason);
     }
   };
 
@@ -93,6 +51,7 @@ export const Chat: React.FC = () => {
     if (inputValue.trim() === "") return;
     socket.send(inputValue);
     setInputValue("");
+    scrollToBottom();
   };
 
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -100,67 +59,24 @@ export const Chat: React.FC = () => {
       handleSendData();
     }
   };
-  const renderMessages = () => {
-    return (
-      <div className="chat__content pt-4 px-3">
-        <ul className="chat__list-messages">
-          {messages &&
-            messages.map((messageData: any, index: number) =>
-              messageData.type === "onlineUsers" ? (
-                <>
-                  <li key={index} className="chat_info_alert">
-                    <div className="chat__time">
-                      {messageData.email} joined at
-                      {formatDate(messageData.date)}
-                    </div>
-                  </li>
-                </>
-              ) : (
-                <li key={index}>
-                  {/* Check if the message was sent by the user */}
-                  {messageData.email === userEmail ? (
-                    <div className="chat_message_container me">
-                      <div className="chat__bubble chat__bubble--me">
-                        <div className="message_time">{messageData.email}</div>
-                        {messageData && messageData.message}
-                      </div>
-                      <div className="message_time">
-                        {messageData && messageData.date}
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="chat_message_container you">
-                      <div className="chat__bubble chat__bubble--you">
-                        <div className="message_time">{messageData.email}</div>
 
-                        {messageData.message}
-                      </div>
-
-                      <div className="message_time">{messageData.date}</div>
-                    </div>
-                  )}
-                </li>
-              )
-            )}
-        </ul>
-      </div>
-    );
+  const handleChatScroll = () => {
+    if (chatContainerRef.current) {
+      setIsScrollingToTop(chatContainerRef.current.scrollTop === 0);
+      setOlderMessagesLoaded(false); // Reset the state when the user starts scrolling
+    }
   };
-
-  useEffect(() => {
-    if (socketRef.current) return;
-    initializeWebSocket();
-
-    const userEmail = localStorage.getItem("email") || "";
-    setUserEmail(userEmail);
-  }, []);
+  const scrollToBottom = () => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop =
+        chatContainerRef.current.scrollHeight;
+    }
+  };
 
   useEffect(() => {
     if (!socket) return;
 
     socket.addEventListener("message", handleSocketMessage);
-    socket.addEventListener("error", handleSocketError);
-    socket.addEventListener("close", handleSocketClose);
 
     return () => {
       if (socket.readyState === 1) {
@@ -169,6 +85,85 @@ export const Chat: React.FC = () => {
       }
     };
   }, [socket]);
+
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.addEventListener("scroll", handleChatScroll);
+    }
+
+    return () => {
+      if (chatContainerRef.current) {
+        chatContainerRef.current.removeEventListener(
+          "scroll",
+          handleChatScroll
+        );
+      }
+    };
+  }, [chatContainerRef.current]);
+
+  const renderMessages = () => {
+    const combinedMessages = [...messages, ...apiMessages];
+    const sortedMessages = combinedMessages.sort(
+      (a: any, b: any) =>
+        new Date(a.date).getTime() - new Date(b.date).getTime()
+    );
+
+    const connectionMessages = sortedMessages.filter(
+      (messageData: any) => messageData.message_type === "connection"
+    );
+
+    const regularMessages = sortedMessages.filter(
+      (messageData: any) => messageData.message_type === "message"
+    );
+
+    return (
+      <div className="chat__content pt-4 px-3" ref={chatContainerRef}>
+        {showLoadMorePrompt && (
+          <div className="chat__load-more-prompt">
+            <button onClick={handleLoadMoreMessages}>Load more messages</button>
+          </div>
+        )}
+        <ul className="chat__list-messages">
+          {messages.map((messageData: any, index: number) => (
+            <li key={index}>
+              <div
+                className={
+                  messageData.email === userEmail
+                    ? "chat_message_container me"
+                    : "chat_message_container you"
+                }
+              >
+                <div
+                  className={
+                    messageData.email === userEmail
+                      ? "chat__bubble chat__bubble--me"
+                      : "chat__bubble chat__bubble--you"
+                  }
+                >
+                  <div className="message_time">{messageData.email}</div>
+                  {messageData.message_content
+                    ? messageData.message_content
+                    : messageData.content}
+                </div>
+                <div className="message_time">{messageData.date}</div>
+              </div>
+            </li>
+          ))}
+
+          {connectionMessages.map((messageData: any, index: number) => (
+            <li key={index}>
+              <div className="chat_info_alert">
+                <div className="chat__time">
+                  {messageData.email} {messageData.message_content} at{" "}
+                  {formatDate(messageData.date)}
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  };
 
   return (
     <div className="chat">

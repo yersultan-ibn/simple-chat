@@ -1,4 +1,4 @@
-export const wsUrl = "wss://simple-chat-api-production.up.railway.app";
+export const wsUrl = "ws://simple-chat-api-production.up.railway.app";
 
 export const members = [
   {
