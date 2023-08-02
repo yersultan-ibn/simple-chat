@@ -18,7 +18,6 @@ export const Chat: React.FC = () => {
     messages,
     socketRef,
     userEmail,
-    onlineUsers,
     initializeWebSocket,
     handleSocketMessage,
     handleSignOut,
@@ -106,24 +105,6 @@ export const Chat: React.FC = () => {
               <div className="chat-member__wrapper" data-online="true">
                 <div className="chat-member__details">
                   <span className="chat-member__name">Simple Chat</span>
-                  {onlineUsers ? (
-                    <p className="chat-member__status">
-                      {onlineUsers.length > 0 ? (
-                        <>
-                          {onlineUsers.map((email, index) => (
-                            <span key={index}>
-                              {email}
-                              {index < onlineUsers.length - 1 ? ", " : ""}
-                            </span>
-                          ))}
-                        </>
-                      ) : (
-                        "No other online users"
-                      )}
-                    </p>
-                  ) : (
-                    <p>Loading...</p>
-                  )}
 
                   <p className="title">General</p>
                   <FormSubmit

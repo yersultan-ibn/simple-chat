@@ -9,7 +9,6 @@ export const useWebSocket = (inputValue: any, setInputValue: any) => {
   const socketRef = useRef<WebSocket>();
   const [socket, setSocket] = useState<WebSocket>();
   const [messages, setMessages] = useState<any[]>([]);
-  const [onlineUsers, setOnlineUsers] = useState<any[]>([]);
   const [userEmail, setUserEmail] = useState("");
 
   const handleSignOut = () => {
@@ -41,12 +40,6 @@ export const useWebSocket = (inputValue: any, setInputValue: any) => {
           type: "message",
         },
       ]);
-    } else if (data.type === "onlineUsers") {
-      if (Array.isArray(data.content)) {
-        setOnlineUsers([data.content, data.type]);
-      } else {
-        setOnlineUsers([data.content, data.type]);
-      }
     }
 
     if (data.type === "errorMessage") {
@@ -97,7 +90,6 @@ export const useWebSocket = (inputValue: any, setInputValue: any) => {
     messages,
     socketRef,
     userEmail,
-    onlineUsers,
     initializeWebSocket,
     handleSignOut,
     handleSocketMessage,
