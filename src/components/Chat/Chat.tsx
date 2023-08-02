@@ -5,160 +5,92 @@ import { WebSocketResponse } from "../../types";
 import "./Chat.scss";
 import { FormSubmit } from "../helpers/FormSubmit";
 import Swal from "sweetalert2";
-import Cookies from "js-cookie";
 import { useWebSocket } from "../hooks/useWebSocket";
 import { useMessageFetching } from "../hooks/useMessageFetching";
+import ReceivedMessage from "./ReceivedMessage/ReceivedMessage";
+import SentMessage from "./SentMessages/SentMessages";
+import { FaSpinner } from "react-icons/fa";
 
 export const Chat: React.FC = () => {
-  const navigate = useNavigate();
   const [inputValue, setInputValue] = useState<string>("");
-  const chatContainerRef = useRef<HTMLDivElement>(null);
-
   const {
     socket,
-    socketRef,
-    onlineUsers,
     messages,
+    socketRef,
+    userEmail,
+    onlineUsers,
     initializeWebSocket,
     handleSocketMessage,
     handleSignOut,
-  } = useWebSocket();
-  
-  const {
-    apiMessages,
-    showLoadMorePrompt,
-    olderMessagesLoaded,
-    userEmail,
-    setIsScrollingToTop,
-    handleLoadMoreMessages,
-    setOlderMessagesLoaded,
-  } = useMessageFetching(messages, socketRef, initializeWebSocket);
+    handleSendData,
+    handleKeyPress,
+  } = useWebSocket(inputValue, setInputValue);
+  const { fetchAndUpdateMessages, apiMessages } = useMessageFetching();
 
-  const formatDate = (dateString: string): any => {
-    if (dateString) {
-      const datePart = dateString.split("T")[0];
-      const timePart = dateString.split("T")[1].slice(0, 5);
-      return `${datePart} ${timePart}`;
-    }
-  };
+  const navigate = useNavigate();
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
   };
 
-  const handleSendData = () => {
-    if (!socket) return;
-    if (inputValue.trim() === "") return;
-    socket.send(inputValue);
-    setInputValue("");
-    scrollToBottom();
-  };
+  const handleScroll = () => {
+    if (containerRef.current) {
+      const scrollTop = containerRef.current.scrollTop;
+      console.log("scrollTop", scrollTop);
+      if (scrollTop === 0) {
+        if (messages.length > 0) {
+          const lastMessageDate = messages[messages.length - 1].date;
 
-  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
-      handleSendData();
-    }
-  };
-
-  const handleChatScroll = () => {
-    if (chatContainerRef.current) {
-      setIsScrollingToTop(chatContainerRef.current.scrollTop === 0);
-      setOlderMessagesLoaded(false); // Reset the state when the user starts scrolling
-    }
-  };
-  const scrollToBottom = () => {
-    if (chatContainerRef.current) {
-      chatContainerRef.current.scrollTop =
-        chatContainerRef.current.scrollHeight;
+          fetchAndUpdateMessages(lastMessageDate);
+        }
+      }
     }
   };
 
   useEffect(() => {
-    if (!socket) return;
-
-    socket.addEventListener("message", handleSocketMessage);
-
-    return () => {
-      if (socket.readyState === 1) {
-        // <-- This is important
-        socket.close();
-      }
-    };
-  }, [socket]);
-
-  useEffect(() => {
-    if (chatContainerRef.current) {
-      chatContainerRef.current.addEventListener("scroll", handleChatScroll);
+    if (containerRef.current) {
+      containerRef.current.addEventListener("scroll", handleScroll);
     }
 
     return () => {
-      if (chatContainerRef.current) {
-        chatContainerRef.current.removeEventListener(
-          "scroll",
-          handleChatScroll
-        );
+      if (containerRef.current) {
+        containerRef.current.removeEventListener("scroll", handleScroll);
       }
     };
-  }, [chatContainerRef.current]);
-
+  }, [messages]);
+  // console.log("messages", messages);
+  // console.log("apiMessages", apiMessages);
+  console.log("onlineUsers", onlineUsers);
   const renderMessages = () => {
-    const combinedMessages = [...messages, ...apiMessages];
-    const sortedMessages = combinedMessages.sort(
-      (a: any, b: any) =>
-        new Date(a.date).getTime() - new Date(b.date).getTime()
-    );
-
-    const connectionMessages = sortedMessages.filter(
-      (messageData: any) => messageData.message_type === "connection"
-    );
-
-    const regularMessages = sortedMessages.filter(
-      (messageData: any) => messageData.message_type === "message"
-    );
-
     return (
-      <div className="chat__content pt-4 px-3" ref={chatContainerRef}>
-        {showLoadMorePrompt && (
-          <div className="chat__load-more-prompt">
-            <button onClick={handleLoadMoreMessages}>Load more messages</button>
-          </div>
-        )}
+      <div className="chat__content pt-4 px-3" ref={containerRef}>
         <ul className="chat__list-messages">
-          {messages.map((messageData: any, index: number) => (
-            <li key={index}>
-              <div
-                className={
-                  messageData.email === userEmail
-                    ? "chat_message_container me"
-                    : "chat_message_container you"
-                }
-              >
-                <div
-                  className={
-                    messageData.email === userEmail
-                      ? "chat__bubble chat__bubble--me"
-                      : "chat__bubble chat__bubble--you"
-                  }
-                >
-                  <div className="message_time">{messageData.email}</div>
-                  {messageData.message_content
-                    ? messageData.message_content
-                    : messageData.content}
-                </div>
-                <div className="message_time">{messageData.date}</div>
-              </div>
-            </li>
+          {/* {messages &&
+            messages.map((messageData: any, index: number) =>
+              messageData.type === "onlineUsers" ? (
+                <>
+                  <li key={index} className="chat_info_alert">
+                    <div className="chat__time">
+                      {messageData.email} joined at {messageData.date}
+                    </div>
+                  </li>
+                </>
+              ) : messageData.email === userEmail ? (
+                <SentMessage key={index} message={messageData} userEmail={userEmail} />
+              ) : (
+                <ReceivedMessage key={index} message={messageData} />
+              )
+            )} */}
+          {apiMessages.map((messageData: any, index: any) => (
+            <ReceivedMessage key={index} message={messageData} />
           ))}
-
-          {connectionMessages.map((messageData: any, index: number) => (
-            <li key={index}>
-              <div className="chat_info_alert">
-                <div className="chat__time">
-                  {messageData.email} {messageData.message_content} at{" "}
-                  {formatDate(messageData.date)}
-                </div>
-              </div>
-            </li>
+          {messages.map((messageData: any, index: number) => (
+            <SentMessage
+              key={index}
+              message={messageData}
+              userEmail={userEmail}
+            />
           ))}
         </ul>
       </div>
@@ -173,12 +105,27 @@ export const Chat: React.FC = () => {
             <div className="chat__infos pl-2 pl-md-0">
               <div className="chat-member__wrapper" data-online="true">
                 <div className="chat-member__details">
-                  <span className="chat-member__name">Simple 
-                      Chat</span>
-                    <p className="title">
-                    
-                      General
+                  <span className="chat-member__name">Simple Chat</span>
+                  {onlineUsers ? (
+                    <p className="chat-member__status">
+                      {onlineUsers.length > 0 ? (
+                        <>
+                          {onlineUsers.map((email, index) => (
+                            <span key={index}>
+                              {email}
+                              {index < onlineUsers.length - 1 ? ", " : ""}
+                            </span>
+                          ))}
+                        </>
+                      ) : (
+                        "No other online users"
+                      )}
                     </p>
+                  ) : (
+                    <p>Loading...</p>
+                  )}
+
+                  <p className="title">General</p>
                   <FormSubmit
                     buttonText="Sign out"
                     buttonStyles="chat-member__signout"

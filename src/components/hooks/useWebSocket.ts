@@ -4,31 +4,33 @@ import { WebSocketResponse } from "../../types";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 
-export const useWebSocket = () => {
+export const useWebSocket = (inputValue: any, setInputValue: any) => {
   const navigate = useNavigate();
-  const socketRef = useRef<WebSocket | undefined>();
-  const [onlineUsers, setOnlineUsers] = useState<string[]>([]);
-  const [socket, setSocket] = useState<WebSocket | undefined>();
-  const [messages, setMessages] = useState<any>([]);
-
-  const initializeWebSocket = () => {
-    const token = localStorage.getItem("token");
-    const newSocket = new WebSocket(`${wsUrl}/ws?token=${token}`);
-
-    socketRef.current = newSocket;
-    setSocket(newSocket);
-  };
+  const socketRef = useRef<WebSocket>();
+  const [socket, setSocket] = useState<WebSocket>();
+  const [messages, setMessages] = useState<any[]>([]);
+  const [onlineUsers, setOnlineUsers] = useState<any[]>([]);
+  const [userEmail, setUserEmail] = useState("");
 
   const handleSignOut = () => {
     localStorage.removeItem("token");
     navigate("/sign-in");
   };
 
+  const initializeWebSocket = () => {
+    const token = localStorage.getItem("token");
+    const socket = new WebSocket(`${wsUrl}/ws?token=${token}`);
+
+    socketRef.current = socket;
+    setSocket(socket);
+  };
+
   const handleSocketMessage = (event: any) => {
-    const data: any = JSON.parse(event.data);
+    const data: WebSocketResponse = JSON.parse(event.data);
 
     if (data.type === "message") {
-      setMessages((prevState: any) => [
+      setMessages((prevState) => [
+        ...prevState,
         {
           id: data.id,
           content: Array.isArray(data.content)
@@ -38,12 +40,13 @@ export const useWebSocket = () => {
           date: data.date,
           type: "message",
         },
-        ...prevState, // Add the previous messages back to the array
       ]);
     } else if (data.type === "onlineUsers") {
-      setOnlineUsers(
-        Array.isArray(data.content) ? data.content : [data.content]
-      );
+      if (Array.isArray(data.content)) {
+        setOnlineUsers([data.content, data.type]);
+      } else {
+        setOnlineUsers([data.content, data.type]);
+      }
     }
 
     if (data.type === "errorMessage") {
@@ -55,29 +58,50 @@ export const useWebSocket = () => {
       });
     }
   };
+
+  const handleSendData = () => {
+    if (!socket) return;
+    if (inputValue.trim() === "") return;
+    socket.send(inputValue);
+    setInputValue("");
+  };
+
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      handleSendData();
+    }
+  };
+
   useEffect(() => {
     if (socketRef.current) return;
     initializeWebSocket();
 
-    return () => {
-      if (socketRef.current?.readyState === WebSocket.OPEN) {
-        socketRef.current.close();
-      }
-    };
+    const userEmail = localStorage.getItem("email") || "";
+    setUserEmail(userEmail);
   }, []);
 
   useEffect(() => {
     if (!socket) return;
-    socket.addEventListener("message", handleSocketMessage);
-  }, [socket]);
 
+    socket.addEventListener("message", handleSocketMessage);
+
+    return () => {
+      if (socket.readyState === 1) {
+        // <-- This is important
+        socket.close();
+      }
+    };
+  }, [socket]);
   return {
     socket,
-    socketRef,
-    onlineUsers,
     messages,
+    socketRef,
+    userEmail,
+    onlineUsers,
     initializeWebSocket,
-    handleSocketMessage,
     handleSignOut,
+    handleSocketMessage,
+    handleSendData,
+    handleKeyPress,
   };
 };
