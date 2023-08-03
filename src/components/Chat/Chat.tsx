@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import "./Chat.scss";
 import { FormSubmit } from "../helpers/FormSubmit";
 import { useWebSocket } from "../../hooks/useWebSocket";
@@ -16,6 +16,7 @@ export const Chat: React.FC = () => {
     handleSignOut,
     handleSendData,
     handleKeyPress,
+    onlineUsers
   } = useWebSocket(inputValue, setInputValue);
   const { fetchAndUpdateMessages, apiMessages, loading  } = useMessageFetching();
 
@@ -61,7 +62,13 @@ export const Chat: React.FC = () => {
               <div className="chat-member__wrapper" data-online="true">
                 <div className="chat-member__details">
                   <span className="chat-member__name">Simple Chat</span>
+                  <div>
                   <p className="title">General</p>
+                  <p className="title">
+                    {onlineUsers.length > 0 ? `${onlineUsers.length} online` : null}
+                  </p>
+                  
+                  </div>
                   <FormSubmit
                     buttonText="Sign out"
                     buttonStyles="chat-member__signout"

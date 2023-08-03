@@ -28,7 +28,7 @@ export interface MessageData {
   message_type:  "message" | "onlineUsers" | "connection"| 'errorMessage'
   email: string;
   id: string;
-  message_content: string;
+  message_content: string | string[];
   created_at: string
 }
 

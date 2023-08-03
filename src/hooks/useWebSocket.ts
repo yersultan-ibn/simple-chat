@@ -11,6 +11,7 @@ export const useWebSocket = (inputValue: any, setInputValue: any) => {
   const [socket, setSocket] = useState<WebSocket>();
   const [messages, setMessages] = useState<MessageData[]>([]);
   const [userEmail, setUserEmail] = useState("");
+  const [onlineUsers, setOnlineUsers] = useState<string[]>([])
 
   const handleSignOut = () => {
     localStorage.removeItem("token");
@@ -35,15 +36,17 @@ export const useWebSocket = (inputValue: any, setInputValue: any) => {
         ...prevState,
        {
         id: data.id,
-        message_content: Array.isArray(data.content)
-        ? data.content.join(" ")
-        : data.content,
+        message_content: data.content,
         created_at: new Date(data.date).toLocaleString("ru"),
         message_type: data.type,
         email: data.email
        }
       ]);
     } 
+
+    if (data.type === "onlineUsers"){
+      setOnlineUsers(data.content as string[])
+    }
 
     if (data.type === "errorMessage") {
       handleSignOut();
@@ -58,6 +61,17 @@ export const useWebSocket = (inputValue: any, setInputValue: any) => {
   const handleSendData = () => {
     if (!socket || socket.readyState === socket.CLOSED || socket.readyState === socket.CLOSING) return;
     if (inputValue.trim() === "") return;
+    if(socket.readyState === socket.CONNECTING){
+      console.log(3)
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: `Socket is still connecting`,
+      });
+
+      return
+    }
+
     socket.send(inputValue);
     setInputValue("");
   };
@@ -94,6 +108,7 @@ export const useWebSocket = (inputValue: any, setInputValue: any) => {
     messages,
     socketRef,
     userEmail,
+    onlineUsers,
     initializeWebSocket,
     handleSignOut,
     handleSocketMessage,
