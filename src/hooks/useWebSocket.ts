@@ -62,7 +62,6 @@ export const useWebSocket = (inputValue: any, setInputValue: any) => {
     if (!socket || socket.readyState === socket.CLOSED || socket.readyState === socket.CLOSING) return;
     if (inputValue.trim() === "") return;
     if(socket.readyState === socket.CONNECTING){
-      console.log(3)
       Swal.fire({
         icon: "error",
         title: "Error",

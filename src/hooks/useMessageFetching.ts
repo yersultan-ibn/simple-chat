@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Cookies from "js-cookie";
 import { MessageData } from "../types";
 
 export const useMessageFetching = () => {
   const [apiMessages, setApiMessages] = useState<MessageData[]>([]);
   const [lastMessageId, setLastMessageId] = useState("");
-
+  const isInitRef = useRef<boolean>();
   const [loading, setLoading] = useState(false);
 
   const fetchAndUpdateMessages = async () => {
@@ -44,6 +44,8 @@ export const useMessageFetching = () => {
   };
 
   useEffect(() => {
+    if (isInitRef.current) return
+    isInitRef.current = true
     fetchAndUpdateMessages()
   }, []);
 
