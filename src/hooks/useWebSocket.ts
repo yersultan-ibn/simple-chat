@@ -48,6 +48,9 @@ export const useWebSocket = (inputValue: any, setInputValue: any) => {
       setJoinedUsers((prevState) => [
         ...prevState,
         {
+          content: Array.isArray(data.content)
+            ? data.content.join(" ")
+            : data.content,
           email: data.email,
           date: new Date(data.date).toLocaleString(), // Convert date to a readable format
         },
