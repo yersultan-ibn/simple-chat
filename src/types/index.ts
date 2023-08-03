@@ -24,6 +24,14 @@ export interface WebSocketResponse {
   errorMessage?: string;
 }
 
+export interface MessageData {
+  message_type:  "message" | "onlineUsers" | "connection"| 'errorMessage'
+  email: string;
+  id: string;
+  message_content: string | string[];
+  created_at: string
+}
+
 export interface FormFieldProps extends FieldAttributes<any> {
   name: string;
   placeholder: string;

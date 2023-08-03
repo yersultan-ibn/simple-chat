@@ -1,6 +1,5 @@
 import { Loader } from "./Loader/Loader";
 import { Chat } from "./Chat/Chat";
-import { ChatMembers } from "./ChatMembers/ChatMembers";
 // import { Dashboard } from "./Dashboard/Dashboard";
 import { FormField } from "./helpers/FormField";
 import { FormSubmit } from "./helpers/FormSubmit";
@@ -14,7 +13,6 @@ import { UserProfile } from "./UserProfile/UserProfile";
 export {
   Loader,
   Chat,
-  ChatMembers,
   PrivateRoute,
   SignIn,
   CheckEmail,
