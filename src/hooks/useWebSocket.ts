@@ -56,7 +56,7 @@ export const useWebSocket = (inputValue: any, setInputValue: any) => {
   };
 
   const handleSendData = () => {
-    if (!socket) return;
+    if (!socket || socket.readyState === socket.CLOSED || socket.readyState === socket.CLOSING) return;
     if (inputValue.trim() === "") return;
     socket.send(inputValue);
     setInputValue("");
