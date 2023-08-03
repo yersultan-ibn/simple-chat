@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Cookies from "js-cookie";
 
 export const useMessageFetching = () => {
@@ -6,9 +6,12 @@ export const useMessageFetching = () => {
   const [lastMessageDate, setLastMessageDate] = useState<string | undefined>(
     undefined
   );
+  const [loading, setLoading] = useState(false);
+  const initializedRef = useRef(false); // Use useRef instead of useState
 
   const fetchAndUpdateMessages = async (lastDate: string | undefined) => {
     try {
+      setLoading(true);
       const token = Cookies.get("token");
       const queryParams = new URLSearchParams({
         token: token || "",
@@ -27,15 +30,20 @@ export const useMessageFetching = () => {
       );
     } catch (error) {
       console.error("Failed to fetch message data from backend:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     const fetchInitialMessages = async () => {
-      await fetchAndUpdateMessages(undefined);
+      if (!initializedRef.current) {
+        initializedRef.current = true;
+        await fetchAndUpdateMessages(undefined);
+      }
     };
     fetchInitialMessages();
   }, []);
 
-  return { apiMessages, fetchAndUpdateMessages };
+  return { apiMessages, fetchAndUpdateMessages, loading };
 };

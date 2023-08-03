@@ -7,10 +7,12 @@ import { FormSubmit } from "../helpers/FormSubmit";
 import Swal from "sweetalert2";
 import { useWebSocket } from "../hooks/useWebSocket";
 import { useMessageFetching } from "../hooks/useMessageFetching";
-import ReceivedMessage from "./ReceivedMessage/ReceivedMessage";
+import { ReceivedMessage } from "./ReceivedMessage/ReceivedMessage";
 import SentMessage from "./SentMessages/SentMessages";
 import { FaSpinner } from "react-icons/fa";
-
+import { Loader } from "../Loader/Loader";
+import { MiniLoader } from "../Loader/MiniLoader";
+import { SavedReceivedMessages } from "./SavedReceivedMessages/SavedReceivedMessages";
 export const Chat: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>("");
   const {
@@ -24,9 +26,8 @@ export const Chat: React.FC = () => {
     handleSendData,
     handleKeyPress,
   } = useWebSocket(inputValue, setInputValue);
-  const { fetchAndUpdateMessages, apiMessages } = useMessageFetching();
+  const { fetchAndUpdateMessages, apiMessages, loading } = useMessageFetching();
 
-  const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,40 +59,51 @@ export const Chat: React.FC = () => {
       }
     };
   }, [messages]);
-  // console.log("messages", messages);
-  // console.log("apiMessages", apiMessages);
-  console.log("onlineUsers", onlineUsers);
+
+  useEffect(() => {
+    const scrollToBottom = () => {
+      if (containerRef.current) {
+        containerRef.current.scrollTop = containerRef.current.scrollHeight;
+      }
+    };
+
+    scrollToBottom();
+  }, [messages]);
+
   const renderMessages = () => {
     return (
       <div className="chat__content pt-4 px-3" ref={containerRef}>
-        <ul className="chat__list-messages">
-          {/* {messages &&
-            messages.map((messageData: any, index: number) =>
-              messageData.type === "onlineUsers" ? (
-                <>
-                  <li key={index} className="chat_info_alert">
-                    <div className="chat__time">
-                      {messageData.email} joined at {messageData.date}
-                    </div>
-                  </li>
-                </>
-              ) : messageData.email === userEmail ? (
-                <SentMessage key={index} message={messageData} userEmail={userEmail} />
+        {loading ? (
+          <div className="chat__loading">
+            <MiniLoader />
+            Loading...
+          </div>
+        ) : (
+          <ul className="chat__list-messages">
+            {apiMessages.map((messageData: any, index: any) => (
+              <SavedReceivedMessages
+                key={index}
+                message={messageData}
+                userEmail={userEmail}
+              />
+            ))}
+            {messages.map((messageData: any, index: number) => {
+              return messageData.email === userEmail ? (
+                <SentMessage
+                  key={index}
+                  message={messageData}
+                  userEmail={userEmail}
+                />
               ) : (
-                <ReceivedMessage key={index} message={messageData} />
-              )
-            )} */}
-          {apiMessages.map((messageData: any, index: any) => (
-            <ReceivedMessage key={index} message={messageData} />
-          ))}
-          {messages.map((messageData: any, index: number) => (
-            <SentMessage
-              key={index}
-              message={messageData}
-              userEmail={userEmail}
-            />
-          ))}
-        </ul>
+                <ReceivedMessage
+                  key={index}
+                  message={messageData}
+                  userEmail={userEmail}
+                />
+              );
+            })}
+          </ul>
+        )}
       </div>
     );
   };

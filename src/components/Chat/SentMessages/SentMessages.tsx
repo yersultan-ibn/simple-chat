@@ -5,8 +5,8 @@ interface SentMessageProps {
 
 const SentMessage: React.FC<SentMessageProps> = ({ message, userEmail }) => {
   return (
-    <div className="chat_message_container me">
-      <div className="chat__bubble chat__bubble--me">
+    <div className="chat_message_container me"> {/* Change the class name here */}
+      <div className="chat__bubble chat__bubble--me"> {/* Change the class name here */}
         <div className="message_time">{userEmail}</div>
         {message && message.content}
       </div>

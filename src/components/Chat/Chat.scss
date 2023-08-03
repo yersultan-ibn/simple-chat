@@ -20,6 +20,12 @@
       text-align: start;
     }
   }
+  &.saved_container {
+    // background: orange;
+    .saved {
+      background: orange !important;
+    }
+  }
 }
 .chat__time {
   &.center {

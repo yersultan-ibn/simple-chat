@@ -1,20 +1,20 @@
+
 interface ReceivedMessageProps {
   message: any;
+  userEmail: string;
 }
 
-const ReceivedMessage: React.FC<ReceivedMessageProps> = ({
+export const ReceivedMessage: React.FC<ReceivedMessageProps> = ({
   message,
-}: ReceivedMessageProps) => {
-  //   console.log(message);
-  return message.message_type === "message" ? (
+  userEmail,
+}) => {
+  return (
     <div className="chat_message_container you">
       <div className="chat__bubble chat__bubble--you">
-        <div className="message_time">{message && message.email}</div>
-        {message && message.message_content}
+        <div className="message_time">{userEmail}</div>
+        {message.content}
       </div>
-      <div className="message_time">{message && message.created_at}</div>
+      <div className="message_time">{message.date}</div>
     </div>
-  ) : null;
+  );
 };
-
-export default ReceivedMessage;
