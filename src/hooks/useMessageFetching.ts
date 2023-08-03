@@ -10,7 +10,7 @@ export const useMessageFetching = () => {
   const [loading, setLoading] = useState(false);
   const initializedRef = useRef(false); // Use useRef instead of useState
 
-  const fetchAndUpdateMessages = async (lastDate: string | undefined) => {
+  const fetchAndUpdateMessages = async () => {
     try {
       setLoading(true);
       const token = Cookies.get("token");
@@ -24,11 +24,25 @@ export const useMessageFetching = () => {
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-      const data = await response.json();
-      setApiMessages((prevMessages) => [...prevMessages, ...data.data]);
-      setLastMessageDate(
-        data.data[data.data.length - 1]?.created_at || undefined
-      );
+      const {data}: {data: MessageData[]} = await response.json();
+
+
+      const messages = [...apiMessages, ...data.map(message => ({
+        ...message,
+        created_at: new Date(message.created_at).toLocaleString("ru")
+      }))]
+
+      messages.sort((a: MessageData, b: MessageData) => (Number(new Date(a.created_at)) - Number(new Date(b.created_at))))
+
+      setApiMessages(messages);
+
+      // let newLastDate
+      // if (messages.length > 0){
+      //   console.log(messages)
+      //   newLastDate = new Date(messages[0].created_at).toISOString()
+      //   setLastMessageDate(newLastDate);
+      // }
+
     } catch (error) {
       console.error("Failed to fetch message data from backend:", error);
     } finally {
@@ -40,7 +54,7 @@ export const useMessageFetching = () => {
     const fetchInitialMessages = async () => {
       if (!initializedRef.current) {
         initializedRef.current = true;
-        await fetchAndUpdateMessages(undefined);
+        await fetchAndUpdateMessages();
       }
     };
     fetchInitialMessages();

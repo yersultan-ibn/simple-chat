@@ -29,11 +29,7 @@ export const Chat: React.FC = () => {
     if (containerRef.current) {
       const scrollTop = containerRef.current.scrollTop;
       if (scrollTop === 0) {
-        if (messages.length > 0) {
-          const lastMessageDate = messages[messages.length - 1].created_at;
-
-          fetchAndUpdateMessages(lastMessageDate);
-        }
+          fetchAndUpdateMessages();
       }
     }
   };
@@ -60,71 +56,32 @@ export const Chat: React.FC = () => {
     scrollToBottom();
   }, [messages]);
 
-  const renderMessages = () => {
-    if (loading){
-      return <div className="chat__loading">
-      <MiniLoader />
-    </div>
+  const renderMessages = (messageList: MessageData[]) => {
+    return  messageList.map((messageData: MessageData, index: any) => {
+      if (messageData.message_type === "connection") {
+        return (
+          <li key={index} className="chat_info_alert">
+            <div className="chat__time">
+              {messageData.email} {messageData.message_content} at{" "}
+              {messageData.created_at}
+            </div>
+          </li>
+        );
+      } else if (messageData.message_type === "message") {
+        return messageData.email === userEmail ? (
+          <SentMessage
+            key={index}
+            data={messageData}
+          />
+        ) : (
+          <ReceivedMessage
+            key={index}
+            data={messageData}
+          />
+        );
+      }
     }
-
-    return (
-      <div className="chat__content pt-4 px-3" ref={containerRef}>
-        <ul className="chat__list-messages">
-          {/* {apiMessages.map((messageData: MessageData, index: any) => {
-            if (messageData.message_type === "connection") {
-              return (
-                <li key={index} className="chat_info_alert">
-                  <div className="chat__time">
-                    {messageData.email} {messageData.message_content} at{" "}
-                    {messageData.created_at}
-                  </div>
-                </li>
-              );
-            } else if (messageData.message_type === "message") {
-              return messageData.email === userEmail ? (
-                <SentMessage
-                  key={index}
-                  data={messageData}
-                />
-              ) : (
-                <ReceivedMessage
-                  key={index}
-                  data={messageData}
-                />
-              );
-            }
-          }
-          )} */}
-          {messages.map((messageData: MessageData, index: number) => {
-            if (messageData.message_type === "connection") {
-              return (
-                <li key={index} className="chat_info_alert">
-                  <div className="chat__time">
-                    {messageData.email} {messageData.message_content} at{" "}
-                    {messageData.created_at}
-                  </div>
-                </li>
-              );
-            } 
-            
-            else if  (messageData.message_type === "message") {
-              return messageData.email === userEmail ? (
-                <SentMessage
-                  key={index}
-                  data={messageData}
-                />
-              ) : (
-                <ReceivedMessage
-                  key={index}
-                  data={messageData}
-                />
-              );
-            }
-          })}
-        </ul>
-      </div>
-    );
-  };
+    )}
    
   return (
     <div className="chat">
@@ -146,7 +103,12 @@ export const Chat: React.FC = () => {
             </div>
           </div>
 
-          {renderMessages()}
+          <div className="chat__content pt-4 px-3" ref={containerRef}>
+            <ul className="chat__list-messages">
+              {renderMessages(apiMessages)}
+              {/* {renderMessages(messages)} */}
+            </ul>
+          </div>
 
           <div className="chat__send-container px-2 px-md-3 pt-1 pt-md-3">
             <div className="custom-form__send-wrapper">
