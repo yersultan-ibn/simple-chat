@@ -81,3 +81,15 @@ p.title {
 .chat__list-messages {
   padding-left: 0 !important;
 }
+
+.circle-green {
+  background: #1dc64d;
+  width: 9px;
+  height: 9px;
+  display: inline-block;
+  border-radius: 50%;
+}
+
+.online-users-count {
+  font-size: 12px;
+}

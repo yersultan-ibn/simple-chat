@@ -63,10 +63,10 @@ export const Chat: React.FC = () => {
                 <div className="chat-member__details">
                   <span className="chat-member__name">Simple Chat</span>
                   <div>
-                  <p className="title">General</p>
-                  <p className="title">
-                    {onlineUsers.length > 0 ? `${onlineUsers.length} online` : null}
+                  <p className="title">General
+                  {onlineUsers.length > 0 ? <span className="online-users-count"><br /><span className="circle-green"></span>  {onlineUsers.length} users</span> : null}
                   </p>
+                
                   
                   </div>
                   <FormSubmit
