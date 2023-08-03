@@ -17,44 +17,13 @@ export const Chat: React.FC = () => {
     handleSendData,
     handleKeyPress,
   } = useWebSocket(inputValue, setInputValue);
-  const { fetchAndUpdateMessages, apiMessages, loading } = useMessageFetching();
+  const { fetchAndUpdateMessages, apiMessages, loading  } = useMessageFetching();
 
   const containerRef = useRef<HTMLDivElement>(null);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(event.target.value);
   };
-
-  const handleScroll = () => {
-    if (containerRef.current) {
-      const scrollTop = containerRef.current.scrollTop;
-      if (scrollTop === 0) {
-          fetchAndUpdateMessages();
-      }
-    }
-  };
-
-  useEffect(() => {
-    if (containerRef.current) {
-      containerRef.current.addEventListener("scroll", handleScroll);
-    }
-
-    return () => {
-      if (containerRef.current) {
-        containerRef.current.removeEventListener("scroll", handleScroll);
-      }
-    };
-  }, [messages]);
-
-  useEffect(() => {
-    const scrollToBottom = () => {
-      if (containerRef.current) {
-        containerRef.current.scrollTop = containerRef.current.scrollHeight;
-      }
-    };
-
-    scrollToBottom();
-  }, [messages]);
 
   const renderMessages = (messageList: MessageData[]) => {
     return  messageList.map((messageData: MessageData, index: any) => {
@@ -105,8 +74,9 @@ export const Chat: React.FC = () => {
 
           <div className="chat__content pt-4 px-3" ref={containerRef}>
             <ul className="chat__list-messages">
+              {loading ? <MiniLoader /> : <button className="btn-link" onClick={fetchAndUpdateMessages}>Load more</button>}
               {renderMessages(apiMessages)}
-              {/* {renderMessages(messages)} */}
+              {renderMessages(messages)}
             </ul>
           </div>
 
