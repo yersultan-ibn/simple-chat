@@ -40,7 +40,7 @@ export const useWebSocket = (inputValue: any, setInputValue: any) => {
             ? data.content.join(" ")
             : data.content,
           email: data.email,
-          date: data.date,
+          date: new Date(data.date).toLocaleString(), // Convert date to a readable format
           type: "message",
         },
       ]);
@@ -48,13 +48,8 @@ export const useWebSocket = (inputValue: any, setInputValue: any) => {
       setJoinedUsers((prevState) => [
         ...prevState,
         {
-          id: data.id,
-          content: Array.isArray(data.content)
-            ? data.content.join(" ")
-            : data.content,
           email: data.email,
-          date: data.date,
-          type: "message",
+          date: new Date(data.date).toLocaleString(), // Convert date to a readable format
         },
       ]);
     }
