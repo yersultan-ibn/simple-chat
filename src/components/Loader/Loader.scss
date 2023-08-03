@@ -14,40 +14,51 @@
   0% {
     transform: translate(12px, 80px) scale(0);
   }
+
   25% {
     transform: translate(12px, 80px) scale(0);
   }
+
   50% {
     transform: translate(12px, 80px) scale(1);
   }
+
   75% {
     transform: translate(80px, 80px) scale(1);
   }
+
   100% {
     transform: translate(148px, 80px) scale(1);
   }
 }
+
 @keyframes ldio-ogtm8crjy8g-r {
   0% {
     transform: translate(148px, 80px) scale(1);
   }
+
   100% {
     transform: translate(148px, 80px) scale(0);
   }
 }
+
 @keyframes ldio-ogtm8crjy8g-c {
   0% {
     background: #832bc1;
   }
+
   25% {
     background: #1bd993;
   }
+
   50% {
     background: #096cfe;
   }
+
   75% {
     background: #503ae6;
   }
+
   100% {
     background: #832bc1;
   }
@@ -62,32 +73,36 @@
   border-radius: 50%;
   transform: translate(80px, 80px) scale(1);
   background: #832bc1;
-  animation: ldio-ogtm8crjy8g 2.2222222222222223s infinite
-    cubic-bezier(0, 0.5, 0.5, 1);
+  animation: ldio-ogtm8crjy8g 2.2222222222222223s infinite cubic-bezier(0, 0.5, 0.5, 1);
 }
+
 .ldio-ogtm8crjy8g div:nth-child(1) {
   background: #503ae6;
   transform: translate(148px, 80px) scale(1);
-  animation: ldio-ogtm8crjy8g-r 0.5555555555555556s infinite
-      cubic-bezier(0, 0.5, 0.5, 1),
+  animation: ldio-ogtm8crjy8g-r 0.5555555555555556s infinite cubic-bezier(0, 0.5, 0.5, 1),
     ldio-ogtm8crjy8g-c 2.2222222222222223s infinite step-start;
 }
+
 .ldio-ogtm8crjy8g div:nth-child(2) {
   animation-delay: -0.5555555555555556s;
   background: #832bc1;
 }
+
 .ldio-ogtm8crjy8g div:nth-child(3) {
   animation-delay: -1.1111111111111112s;
   background: #503ae6;
 }
+
 .ldio-ogtm8crjy8g div:nth-child(4) {
   animation-delay: -1.6666666666666665s;
   background: #096cfe;
 }
+
 .ldio-ogtm8crjy8g div:nth-child(5) {
   animation-delay: -2.2222222222222223s;
   background: #1bd993;
 }
+
 .loadingio-spinner-ellipsis-57ekl48z0o3 {
   width: 200px;
   height: 200px;
@@ -95,14 +110,17 @@
   overflow: hidden;
   background: #fff;
 }
+
 .ldio-ogtm8crjy8g {
   width: 100%;
   height: 100%;
   position: relative;
   transform: translate(0) scale(1);
   backface-visibility: hidden;
-  transform-origin: 0 0; /* see note above */
+  transform-origin: 0 0;
+  /* see note above */
 }
+
 .ldio-ogtm8crjy8g div {
   box-sizing: content-box;
 }
@@ -112,12 +130,14 @@ $duration: 1.4s;
 
 .mini-spinner {
   animation: rotator $duration linear infinite;
+  margin: 0 auto;
 }
 
 @keyframes rotator {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(270deg);
   }
@@ -135,15 +155,19 @@ $duration: 1.4s;
   0% {
     stroke: #4285f4;
   }
+
   25% {
     stroke: #de3e35;
   }
+
   50% {
     stroke: #f7c223;
   }
+
   75% {
     stroke: #1b9a59;
   }
+
   100% {
     stroke: #4285f4;
   }
@@ -153,10 +177,12 @@ $duration: 1.4s;
   0% {
     stroke-dashoffset: $offset;
   }
+
   50% {
     stroke-dashoffset: $offset/4;
     transform: rotate(135deg);
   }
+
   100% {
     stroke-dashoffset: $offset;
     transform: rotate(450deg);
