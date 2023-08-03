@@ -8,7 +8,7 @@ import Swal from "sweetalert2";
 import { useWebSocket } from "../hooks/useWebSocket";
 import { useMessageFetching } from "../hooks/useMessageFetching";
 import { ReceivedMessage } from "./ReceivedMessage/ReceivedMessage";
-import SentMessage from "./SentMessages/SentMessages";
+import { SentMessage } from "./SentMessages/SentMessages";
 import { FaSpinner } from "react-icons/fa";
 import { Loader } from "../Loader/Loader";
 import { MiniLoader } from "../Loader/MiniLoader";
@@ -80,7 +80,6 @@ export const Chat: React.FC = () => {
       return userJoinMessages.slice(-1);
     };
 
-    // Get unique user emails
     const uniqueUserEmails = Array.from(
       new Set(apiMessages.map((messageData) => messageData.email))
     );

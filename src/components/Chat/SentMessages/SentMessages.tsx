@@ -3,10 +3,13 @@ interface SentMessageProps {
   userEmail: string;
 }
 
-const SentMessage: React.FC<SentMessageProps> = ({ message, userEmail }) => {
+export const SentMessage: React.FC<SentMessageProps> = ({
+  message,
+  userEmail,
+}) => {
   return (
-    <div className="chat_message_container me"> 
-      <div className="chat__bubble chat__bubble--me"> 
+    <div className="chat_message_container me">
+      <div className="chat__bubble chat__bubble--me">
         <div className="message_time">{userEmail}</div>
         {message && message.content}
       </div>
@@ -14,5 +17,3 @@ const SentMessage: React.FC<SentMessageProps> = ({ message, userEmail }) => {
     </div>
   );
 };
-
-export default SentMessage;
