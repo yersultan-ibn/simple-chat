@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { wsUrl } from "../constants";
-import { WebSocketResponse } from "../types";
+import { MessageData, WebSocketResponse } from "../types";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
@@ -9,8 +9,7 @@ export const useWebSocket = (inputValue: any, setInputValue: any) => {
   const navigate = useNavigate();
   const socketRef = useRef<WebSocket>();
   const [socket, setSocket] = useState<WebSocket>();
-  const [messages, setMessages] = useState<any[]>([]);
-  const [joinedUsers, setJoinedUsers] = useState<any[]>([]);
+  const [messages, setMessages] = useState<MessageData[]>([]);
   const [userEmail, setUserEmail] = useState("");
 
   const handleSignOut = () => {
@@ -31,31 +30,20 @@ export const useWebSocket = (inputValue: any, setInputValue: any) => {
   const handleSocketMessage = (event: any) => {
     const data: WebSocketResponse = JSON.parse(event.data);
 
-    if (data.type === "message") {
-      setMessages((prevState) => [
+    if (data.type === "message" || data.type === "connection" ) {
+      setMessages((prevState: MessageData[]) => [
         ...prevState,
-        {
-          id: data.id,
-          content: Array.isArray(data.content)
-            ? data.content.join(" ")
-            : data.content,
-          email: data.email,
-          date: new Date(data.date).toLocaleString(),
-          type: "message",
-        },
+       {
+        id: data.id,
+        message_content: Array.isArray(data.content)
+        ? data.content.join(" ")
+        : data.content,
+        created_at: data.date,
+        message_type: data.type,
+        email: data.email
+       }
       ]);
-    } else if (data.type === "connection") {
-      setJoinedUsers((prevState) => [
-        ...prevState,
-        {
-          content: Array.isArray(data.content)
-            ? data.content.join(" ")
-            : data.content,
-          email: data.email,
-          date: new Date(data.date).toLocaleString(), 
-        },
-      ]);
-    }
+    } 
 
     if (data.type === "errorMessage") {
       handleSignOut();
@@ -104,8 +92,6 @@ export const useWebSocket = (inputValue: any, setInputValue: any) => {
   return {
     socket,
     messages,
-    joinedUsers,
-
     socketRef,
     userEmail,
     initializeWebSocket,

@@ -12,7 +12,6 @@ export const Chat: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>("");
   const {
     messages,
-    joinedUsers,
     userEmail,
     handleSignOut,
     handleSendData,
@@ -31,7 +30,7 @@ export const Chat: React.FC = () => {
       const scrollTop = containerRef.current.scrollTop;
       if (scrollTop === 0) {
         if (messages.length > 0) {
-          const lastMessageDate = messages[messages.length - 1].date;
+          const lastMessageDate = messages[messages.length - 1].created_at;
 
           fetchAndUpdateMessages(lastMessageDate);
         }
@@ -71,7 +70,7 @@ export const Chat: React.FC = () => {
     return (
       <div className="chat__content pt-4 px-3" ref={containerRef}>
         <ul className="chat__list-messages">
-          {apiMessages.map((messageData: MessageData, index: any) => {
+          {/* {apiMessages.map((messageData: MessageData, index: any) => {
             if (messageData.message_type === "connection") {
               return (
                 <li key={index} className="chat_info_alert">
@@ -95,7 +94,7 @@ export const Chat: React.FC = () => {
               );
             }
           }
-          )}
+          )} */}
           {messages.map((messageData: MessageData, index: number) => {
             if (messageData.message_type === "connection") {
               return (
@@ -106,7 +105,9 @@ export const Chat: React.FC = () => {
                   </div>
                 </li>
               );
-            } else {
+            } 
+            
+            else if  (messageData.message_type === "message") {
               return messageData.email === userEmail ? (
                 <SentMessage
                   key={index}
