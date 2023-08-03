@@ -38,7 +38,6 @@ export const Chat: React.FC = () => {
   const handleScroll = () => {
     if (containerRef.current) {
       const scrollTop = containerRef.current.scrollTop;
-      console.log("scrollTop", scrollTop);
       if (scrollTop === 0) {
         if (messages.length > 0) {
           const lastMessageDate = messages[messages.length - 1].date;
@@ -71,7 +70,6 @@ export const Chat: React.FC = () => {
     scrollToBottom();
   }, [messages]);
 
-  // console.log("messages", messages);
   const renderMessages = () => {
     return (
       <div className="chat__content pt-4 px-3" ref={containerRef}>

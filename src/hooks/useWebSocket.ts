@@ -40,7 +40,7 @@ export const useWebSocket = (inputValue: any, setInputValue: any) => {
             ? data.content.join(" ")
             : data.content,
           email: data.email,
-          date: new Date(data.date).toLocaleString(), // Convert date to a readable format
+          date: new Date(data.date).toLocaleString(),
           type: "message",
         },
       ]);
@@ -52,7 +52,7 @@ export const useWebSocket = (inputValue: any, setInputValue: any) => {
             ? data.content.join(" ")
             : data.content,
           email: data.email,
-          date: new Date(data.date).toLocaleString(), // Convert date to a readable format
+          date: new Date(data.date).toLocaleString(), 
         },
       ]);
     }
@@ -100,7 +100,6 @@ export const useWebSocket = (inputValue: any, setInputValue: any) => {
       }
     };
   }, [socket]);
-  console.log("message1111s", messages);
 
   return {
     socket,
