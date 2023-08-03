@@ -1,9 +1,5 @@
 import "./Loader.scss";
 
-interface LoaderProps {
-  text: string;
-}
-
 export const MiniLoader = () => {
   return (
     <svg

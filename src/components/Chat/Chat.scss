@@ -22,21 +22,26 @@
       text-align: start;
     }
   }
+
   &.saved_container {
+
     // background: orange;
     .saved {
       background: orange !important;
     }
   }
 }
+
 .chat__time {
   &.center {
     text-align: center;
   }
 }
+
 .chat__list-messages {
   overflow: hidden !important;
 }
+
 .message_time {
   font-size: 10px;
 }
@@ -48,10 +53,17 @@ p.title {
 .chat-member__name {
   font-weight: 400;
 }
+
 .chat-member__status {
   margin: 0px;
   font-weight: 700;
+
   span {
     color: #32bc32;
   }
+}
+
+.chat__loading {
+  display: flex;
+  justify-content: center;
 }
