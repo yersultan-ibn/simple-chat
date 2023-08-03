@@ -14,7 +14,7 @@ Welcome to Simple Chat - a straightforward web application for real-time messagi
 
 ## Demo
 
-[Simple Chat - Demo](https://chat-ws.vercel.app/)
+[Simple Chat - Demo](https://simple-chat-n.vercel.app/)
 
 ## Running the Project Locally
 
