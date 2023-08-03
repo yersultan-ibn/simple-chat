@@ -1,16 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { MessageData } from "../types";
-import { compareAsc } from "date-fns";
 
 export const useMessageFetching = () => {
   const [apiMessages, setApiMessages] = useState<MessageData[]>([]);
-  const [lastMessageDate, setLastMessageDate] = useState<string | undefined>(
-    undefined
-  );
+  const [lastMessageId, setLastMessageId] = useState("");
 
   const [loading, setLoading] = useState(false);
-  const initializedRef = useRef(false); // Use useRef instead of useState
 
   const fetchAndUpdateMessages = async () => {
     try {
@@ -19,20 +15,27 @@ export const useMessageFetching = () => {
       const token = Cookies.get("token");
       const queryParams = new URLSearchParams({
         token: token || "",
-        lastMessageDate: lastMessageDate || "",
+        lastMessageId: lastMessageId || "",
       });
+
       const response = await fetch(
-        `https://simple-chat-api-production.up.railway.app/api/chats/general/messages?${queryParams}`
+        `https://simple-chat-api-production.up.railway.app/api/chats/general/messages?${queryParams}`,
       );
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
       
-      const { data }: {data: MessageData[], lastMessageDate: string } = await response.json();
+      const { data = [] }: {data: MessageData[], lastMessageDate: string } = await response.json();
+
       data.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
-      
-      setLastMessageDate(new Date(data[0].created_at).toISOString())
-      setApiMessages(data)
+
+      if (data.length > 0){
+        setLastMessageId(data[0].id)
+        setApiMessages([ ...data.map((message) => ({
+          ...message,
+          created_at: new Date(message.created_at).toLocaleString("ru")
+        })), ...apiMessages])
+      }
     } catch (error) {
       console.error("Failed to fetch message data from backend:", error);
     } finally {
@@ -41,13 +44,7 @@ export const useMessageFetching = () => {
   };
 
   useEffect(() => {
-    const fetchInitialMessages = async () => {
-      if (!initializedRef.current) {
-        initializedRef.current = true;
-        await fetchAndUpdateMessages();
-      }
-    };
-    fetchInitialMessages();
+    fetchAndUpdateMessages()
   }, []);
 
   return { apiMessages, fetchAndUpdateMessages, loading };
