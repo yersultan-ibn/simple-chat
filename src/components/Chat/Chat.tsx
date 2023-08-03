@@ -18,6 +18,7 @@ export const Chat: React.FC = () => {
   const {
     socket,
     messages,
+    joinedUsers,
     socketRef,
     userEmail,
     initializeWebSocket,
@@ -70,36 +71,17 @@ export const Chat: React.FC = () => {
     scrollToBottom();
   }, [messages]);
 
+  // console.log("messages", messages);
   const renderMessages = () => {
-    const getLastTwoJoinMessages = (email: any) => {
-      const userJoinMessages = apiMessages.filter(
-        (messageData) =>
-          messageData.message_type === "connection" &&
-          messageData.email === email
-      );
-      return userJoinMessages.slice(-1);
-    };
-
-    const uniqueUserEmails = Array.from(
-      new Set(apiMessages.map((messageData) => messageData.email))
-    );
-
     return (
       <div className="chat__content pt-4 px-3" ref={containerRef}>
-        {uniqueUserEmails.length > 0 && (
-          <ul className="chat__list-messages">
-            {uniqueUserEmails.map((email) => {
-              const lastTwoJoinMessages = getLastTwoJoinMessages(email);
-              return lastTwoJoinMessages.map((messageData) => (
-                <li key={messageData.id} className="chat_info_alert">
-                  <div className="chat__time">
-                    {messageData.email} joined at {messageData.created_at}
-                  </div>
-                </li>
-              ));
-            })}
-          </ul>
-        )}
+        {joinedUsers.map((messageData: any, index: number) => (
+          <li key={index} className="chat_info_alert">
+            <div className="chat__time">
+              {messageData.email} {messageData.content} at {messageData.date}
+            </div>
+          </li>
+        ))}
         {loading ? (
           <div className="chat__loading">
             <MiniLoader />
@@ -115,19 +97,30 @@ export const Chat: React.FC = () => {
               />
             ))}
             {messages.map((messageData: any, index: number) => {
-              return messageData.email === userEmail ? (
-                <SentMessage
-                  key={index}
-                  message={messageData}
-                  userEmail={userEmail}
-                />
-              ) : (
-                <ReceivedMessage
-                  key={index}
-                  message={messageData}
-                  userEmail={userEmail}
-                />
-              );
+              if (messageData.type === "connection") {
+                return (
+                  <li key={index} className="chat_info_alert">
+                    <div className="chat__time">
+                      {messageData.email} {messageData.content} at{" "}
+                      {messageData.date}
+                    </div>
+                  </li>
+                );
+              } else {
+                return messageData.email === userEmail ? (
+                  <SentMessage
+                    key={index}
+                    message={messageData}
+                    userEmail={userEmail}
+                  />
+                ) : (
+                  <ReceivedMessage
+                    key={index}
+                    message={messageData}
+                    userEmail={userEmail}
+                  />
+                );
+              }
             })}
           </ul>
         )}

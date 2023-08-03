@@ -3,16 +3,20 @@ import { wsUrl } from "../constants";
 import { WebSocketResponse } from "../types";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 export const useWebSocket = (inputValue: any, setInputValue: any) => {
   const navigate = useNavigate();
   const socketRef = useRef<WebSocket>();
   const [socket, setSocket] = useState<WebSocket>();
   const [messages, setMessages] = useState<any[]>([]);
+  const [joinedUsers, setJoinedUsers] = useState<any[]>([]);
   const [userEmail, setUserEmail] = useState("");
 
   const handleSignOut = () => {
     localStorage.removeItem("token");
+    Cookies.remove("token");
+    localStorage.removeItem("email");
     navigate("/sign-in");
   };
 
@@ -29,6 +33,19 @@ export const useWebSocket = (inputValue: any, setInputValue: any) => {
 
     if (data.type === "message") {
       setMessages((prevState) => [
+        ...prevState,
+        {
+          id: data.id,
+          content: Array.isArray(data.content)
+            ? data.content.join(" ")
+            : data.content,
+          email: data.email,
+          date: data.date,
+          type: "message",
+        },
+      ]);
+    } else if (data.type === "connection") {
+      setJoinedUsers((prevState) => [
         ...prevState,
         {
           id: data.id,
@@ -85,9 +102,13 @@ export const useWebSocket = (inputValue: any, setInputValue: any) => {
       }
     };
   }, [socket]);
+  console.log("message1111s", messages);
+
   return {
     socket,
     messages,
+    joinedUsers,
+
     socketRef,
     userEmail,
     initializeWebSocket,
