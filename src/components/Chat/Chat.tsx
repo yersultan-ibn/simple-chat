@@ -102,7 +102,13 @@ export const Chat: React.FC = () => {
               <button
                 type="submit"
                 className="custom-form__send-submit"
-                onClick={handleSendData}
+                onClick={() => {
+                  handleSendData()
+                  containerRef.current?.scrollTo({
+                    behavior: 'smooth',
+                    top: containerRef.current.scrollHeight * 2
+                  })
+                }}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
