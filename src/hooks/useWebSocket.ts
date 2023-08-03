@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { wsUrl } from "../../constants";
-import { WebSocketResponse } from "../../types";
+import { wsUrl } from "../constants";
+import { WebSocketResponse } from "../types";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 
