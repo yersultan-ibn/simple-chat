@@ -71,8 +71,36 @@ export const Chat: React.FC = () => {
   }, [messages]);
 
   const renderMessages = () => {
+    const getLastTwoJoinMessages = (email: any) => {
+      const userJoinMessages = apiMessages.filter(
+        (messageData) =>
+          messageData.message_type === "connection" &&
+          messageData.email === email
+      );
+      return userJoinMessages.slice(-1);
+    };
+
+    // Get unique user emails
+    const uniqueUserEmails = Array.from(
+      new Set(apiMessages.map((messageData) => messageData.email))
+    );
+
     return (
       <div className="chat__content pt-4 px-3" ref={containerRef}>
+        {uniqueUserEmails.length > 0 && (
+          <ul className="chat__list-messages">
+            {uniqueUserEmails.map((email) => {
+              const lastTwoJoinMessages = getLastTwoJoinMessages(email);
+              return lastTwoJoinMessages.map((messageData) => (
+                <li key={messageData.id} className="chat_info_alert">
+                  <div className="chat__time">
+                    {messageData.email} joined at {messageData.created_at}
+                  </div>
+                </li>
+              ));
+            })}
+          </ul>
+        )}
         {loading ? (
           <div className="chat__loading">
             <MiniLoader />

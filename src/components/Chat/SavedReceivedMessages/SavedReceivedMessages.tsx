@@ -10,7 +10,7 @@ export const SavedReceivedMessages: React.FC<SavedReceivedMessagesProps> = ({
   if (message.message_type === "message") {
     return (
       <div
-        className={`chat_message_container ${
+        className={`chat_message_container saved_container ${
           message.email === userEmail ? "me" : "you"
         }`}
       >
