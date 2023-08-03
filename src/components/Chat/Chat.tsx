@@ -13,6 +13,7 @@ import { FaSpinner } from "react-icons/fa";
 import { Loader } from "../Loader/Loader";
 import { MiniLoader } from "../Loader/MiniLoader";
 import { SavedReceivedMessages } from "./SavedReceivedMessages/SavedReceivedMessages";
+
 export const Chat: React.FC = () => {
   const [inputValue, setInputValue] = useState<string>("");
   const {
@@ -135,7 +136,6 @@ export const Chat: React.FC = () => {
               <div className="chat-member__wrapper" data-online="true">
                 <div className="chat-member__details">
                   <span className="chat-member__name">Simple Chat</span>
-
                   <p className="title">General</p>
                   <FormSubmit
                     buttonText="Sign out"

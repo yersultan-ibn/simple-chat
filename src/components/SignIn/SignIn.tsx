@@ -38,7 +38,7 @@ export const SignIn: React.FC = () => {
       Cookies.set("token", data.token);
       localStorage.setItem("email", values.username);
       Swal.fire("Good job!", `Welcome ${values.username}`, "success");
-      navigate(`/`);
+      navigate("/");
     } catch (error: any) {
       setShowError("User not registered");
       Swal.fire({
