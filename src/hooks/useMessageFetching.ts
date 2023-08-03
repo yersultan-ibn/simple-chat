@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import Cookies from "js-cookie";
+import { MessageData } from "../types";
 
 export const useMessageFetching = () => {
-  const [apiMessages, setApiMessages] = useState<any[]>([]);
+  const [apiMessages, setApiMessages] = useState<MessageData[]>([]);
   const [lastMessageDate, setLastMessageDate] = useState<string | undefined>(
     undefined
   );

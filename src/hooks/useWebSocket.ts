@@ -38,7 +38,7 @@ export const useWebSocket = (inputValue: any, setInputValue: any) => {
         message_content: Array.isArray(data.content)
         ? data.content.join(" ")
         : data.content,
-        created_at: data.date,
+        created_at: new Date(data.date).toLocaleString("ru"),
         message_type: data.type,
         email: data.email
        }
