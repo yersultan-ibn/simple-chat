@@ -1,18 +1,21 @@
 import { useEffect, useRef, useState } from "react";
 import Cookies from "js-cookie";
 import { MessageData } from "../types";
+import { compareAsc } from "date-fns";
 
 export const useMessageFetching = () => {
   const [apiMessages, setApiMessages] = useState<MessageData[]>([]);
   const [lastMessageDate, setLastMessageDate] = useState<string | undefined>(
     undefined
   );
+
   const [loading, setLoading] = useState(false);
   const initializedRef = useRef(false); // Use useRef instead of useState
 
   const fetchAndUpdateMessages = async () => {
     try {
       setLoading(true);
+
       const token = Cookies.get("token");
       const queryParams = new URLSearchParams({
         token: token || "",
@@ -24,25 +27,12 @@ export const useMessageFetching = () => {
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-      const {data}: {data: MessageData[]} = await response.json();
-
-
-      const messages = [...apiMessages, ...data.map(message => ({
-        ...message,
-        created_at: new Date(message.created_at).toLocaleString("ru")
-      }))]
-
-      messages.sort((a: MessageData, b: MessageData) => (Number(new Date(a.created_at)) - Number(new Date(b.created_at))))
-
-      setApiMessages(messages);
-
-      // let newLastDate
-      // if (messages.length > 0){
-      //   console.log(messages)
-      //   newLastDate = new Date(messages[0].created_at).toISOString()
-      //   setLastMessageDate(newLastDate);
-      // }
-
+      
+      const { data }: {data: MessageData[], lastMessageDate: string } = await response.json();
+      data.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime())
+      
+      setLastMessageDate(new Date(data[0].created_at).toISOString())
+      setApiMessages(data)
     } catch (error) {
       console.error("Failed to fetch message data from backend:", error);
     } finally {
