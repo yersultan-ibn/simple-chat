@@ -45,7 +45,7 @@ export const useWebSocket = (inputValue: any, setInputValue: any) => {
     } 
 
     if (data.type === "onlineUsers"){
-      setOnlineUsers(data.content as string[])
+      setOnlineUsers(Array.from(new Set(data.content as string[])))
     }
 
     if (data.type === "errorMessage") {
